@@ -1,0 +1,9 @@
+Flask
+flask-pymongo
+werkzeug
+pymongo
+nltk
+scikit-learn
+PyPDF2
+python-docx
+reportlab

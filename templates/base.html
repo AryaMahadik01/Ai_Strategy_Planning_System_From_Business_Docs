@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StrategixAI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+
+<div class="app-container">
+
+    {% if session.get('user') %}
+        {% include "layout/sidebar.html" %}
+    {% endif %}
+
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Strategy Overview</h2>
+
+<div class="kpi-row">
+    <div class="card">
+        <h4>Documents Analyzed</h4>
+        <h2>{{ documents | length }}</h2>
+    </div>
+    <div class="card">
+        <h4>Primary Intent</h4>
+        <h2>Growth</h2>
+    </div>
+    <div class="card">
+        <h4>Risk Level</h4>
+        <h2>Medium</h2>
+    </div>
+    <div class="card">
+        <h4>Strategy Confidence</h4>
+        <h2>75%</h2>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Uploaded Documents</h3>
+    <ul>
+        {% for d in documents %}
+            <li>
+                <b>{{ d.filename }}</b>
+                <br>
+                <a href="/download/{{ d._id }}">⬇ Download Report</a>
+            </li>
+        {% else %}
+            <li>No documents uploaded yet</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

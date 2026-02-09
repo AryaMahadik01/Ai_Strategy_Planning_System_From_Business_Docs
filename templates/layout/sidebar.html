@@ -1,0 +1,24 @@
+<div class="sidebar">
+    <div class="logo">StrategixAI</div>
+
+    {% if session.get('role') == 'user' %}
+        <a href="/user/dashboard">📊 Dashboard</a>
+        <a href="/user/upload">📄 Upload Document</a>
+        <a href="/user/analysis">🧠 Strategic Analysis</a>
+        <a href="/user/decisions">📈 Decision Intelligence</a>
+        <a href="/user/reports">📑 Reports</a>
+        <a href="/profile">⚙ Profile</a>
+    {% endif %}
+
+    {% if session.get('role') == 'admin' %}
+        <a href="/admin/dashboard">📊 Admin Dashboard</a>
+    {% endif %}
+
+    <hr>
+
+    <a href="/logout">🚪 Logout</a>
+
+    <div class="profile">
+        <p>{{ session.get('user') }}</p>
+    </div>
+</div>

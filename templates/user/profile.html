@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>User Profile</h2>
+
+<div class="card">
+    <p><b>Email:</b> {{ session.get('user') }}</p>
+    <p><b>Role:</b> {{ session.get('role') }}</p>
+</div>
+{% endblock %}

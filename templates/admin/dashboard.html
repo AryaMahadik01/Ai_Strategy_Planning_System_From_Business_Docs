@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<div class="card">
+    <p><b>Total Users:</b> {{ total_users }}</p>
+    <p><b>Total Documents:</b> {{ total_documents }}</p>
+</div>
+
+<div class="card">
+    <h3>Business Intent Distribution</h3>
+    <ul>
+        {% for intent, count in intent_stats.items() %}
+            <li>{{ intent }} : {{ count }}</li>
+        {% else %}
+            <li>No intent data available</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h3>Registered Users</h3>
+    <ul>
+        {% for u in users %}
+            <li>{{ u.name }} ({{ u.email }}) – {{ u.role }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h3>Uploaded Documents</h3>
+    <ul>
+        {% for d in documents %}
+            <li>{{ d.filename }} – {{ d.user }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
