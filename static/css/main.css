@@ -207,3 +207,14 @@ footer {
     text-align: center;
     padding: 15px;
 }
+
+.nav-section {
+    margin-bottom: 25px;
+}
+
+.nav-title {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+}

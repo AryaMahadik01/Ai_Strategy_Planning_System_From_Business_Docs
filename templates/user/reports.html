@@ -1,10 +1,69 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Reports</h2>
+<h2>Reports & Exports</h2>
 
-<div class="card">
-    <p>Download AI-generated strategy reports for decision-making.</p>
-    <p>Reports are available on your dashboard after document analysis.</p>
+<p style="color:#64748b">
+Access and download AI-generated consulting-style strategy reports based on
+your uploaded business documents.
+</p>
+
+<!-- REPORT OVERVIEW -->
+<div class="kpi-row">
+    <div class="card">
+        <h4>Report Type</h4>
+        <p>Executive Strategy Report</p>
+    </div>
+
+    <div class="card">
+        <h4>Frameworks Included</h4>
+        <p>SWOT · PESTLE · Five Forces</p>
+    </div>
+
+    <div class="card">
+        <h4>Planning Horizon</h4>
+        <p>12–24 Months</p>
+    </div>
+
+    <div class="card">
+        <h4>Format</h4>
+        <p>Professional PDF</p>
+    </div>
 </div>
+
+<!-- AVAILABLE REPORTS -->
+<div class="card">
+    <h3>Available Strategy Reports</h3>
+
+    <p style="color:#64748b">
+        Each report is generated using AI-driven strategic analysis and follows
+        a consulting-style structure suitable for executive decision-making.
+    </p>
+
+    <ul>
+        {% for d in documents %}
+            <li style="margin-bottom:15px">
+                <b>{{ d.filename }}</b><br>
+                <span style="color:#64748b">
+                    Includes: Executive Summary, Strategic Diagnosis, Roadmap, KPIs, Risk Analysis
+                </span><br>
+                <a href="/download/{{ d._id }}">⬇ Download Strategy Report (PDF)</a>
+            </li>
+        {% else %}
+            <li>No reports available yet. Upload a business document to generate reports.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- REPORT EXPLANATION -->
+<div class="card">
+    <h3>About These Reports</h3>
+    <p>
+        The AI Strategy Reports are designed to replicate the structure and
+        depth of professional consulting deliverables. They combine multiple
+        strategic frameworks, KPI-based performance indicators, and risk
+        assessments into a single executive-ready document.
+    </p>
+</div>
+
 {% endblock %}

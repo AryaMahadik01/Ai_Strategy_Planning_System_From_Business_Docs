@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Risk Heatmaps</h2>
+
+<div class="card">
+    <p>Aggregated risk exposure across all analyzed businesses.</p>
+    <ul>
+        {% for risk, count in risk_count.items() %}
+            <li>⚠ {{ risk }} — {{ count }} occurrences</li>
+        {% else %}
+            <li>No risk data available</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

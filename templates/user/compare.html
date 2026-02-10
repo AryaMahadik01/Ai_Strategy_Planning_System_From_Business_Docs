@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Strategy Comparison Engine</h2>
+
+<p style="color:#64748b">
+Compare two business documents to evaluate strategic strength and effectiveness.
+</p>
+
+<!-- DOCUMENT SELECTOR -->
+<div class="card">
+    <h3>Select Documents</h3>
+    <form method="POST">
+        <select name="doc1" required>
+            <option value="">Select First Document</option>
+            {% for d in documents %}
+                <option value="{{ d._id }}">{{ d.filename }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="doc2" required style="margin-top:10px">
+            <option value="">Select Second Document</option>
+            {% for d in documents %}
+                <option value="{{ d._id }}">{{ d.filename }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" style="margin-top:15px">
+            Compare Strategies
+        </button>
+    </form>
+</div>
+
+{% if comparison %}
+<!-- COMPARISON RESULT -->
+<div class="kpi-row">
+    <div class="card">
+        <h4>{{ comparison.doc1.name }}</h4>
+        <p><b>Focus:</b> {{ comparison.doc1.focus }}</p>
+        <p><b>Strength Score:</b> {{ comparison.doc1.score }}/100</p>
+        <p><b>Risk Level:</b> {{ comparison.doc1.risk }}</p>
+    </div>
+
+    <div class="card">
+        <h4>{{ comparison.doc2.name }}</h4>
+        <p><b>Focus:</b> {{ comparison.doc2.focus }}</p>
+        <p><b>Strength Score:</b> {{ comparison.doc2.score }}/100</p>
+        <p><b>Risk Level:</b> {{ comparison.doc2.risk }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3>AI Recommendation</h3>
+    <p><b>Stronger Strategy:</b> {{ comparison.winner }}</p>
+    <p>{{ comparison.explanation }}</p>
+</div>
+{% endif %}
+
+{% endblock %}

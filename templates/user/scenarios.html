@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Scenario Comparison</h2>
+
+<p style="color:#64748b">
+Simulate strategic outcomes by prioritizing different business objectives.
+</p>
+
+<!-- SCENARIO SELECTOR -->
+<div class="card">
+    <h3>Select Scenario</h3>
+    <form method="GET">
+        <select name="scenario">
+            <option value="growth" {% if scenario=='growth' %}selected{% endif %}>
+                Growth-Focused Strategy
+            </option>
+            <option value="cost" {% if scenario=='cost' %}selected{% endif %}>
+                Cost Optimization Strategy
+            </option>
+            <option value="risk" {% if scenario=='risk' %}selected{% endif %}>
+                Risk Minimization Strategy
+            </option>
+        </select>
+        <button type="submit">Simulate</button>
+    </form>
+</div>
+
+<!-- RESULTS -->
+<div class="kpi-row">
+    <div class="card">
+        <h4>Primary Focus</h4>
+        <h2>{{ result.focus }}</h2>
+    </div>
+
+    <div class="card">
+        <h4>Strategy Readiness</h4>
+        <h2>{{ result.readiness }}%</h2>
+    </div>
+
+    <div class="card">
+        <h4>Risk Exposure</h4>
+        <h2>{{ result.risk }}%</h2>
+    </div>
+
+    <div class="card">
+        <h4>AI Confidence</h4>
+        <h2>{{ result.confidence }}%</h2>
+    </div>
+</div>
+
+<!-- KPI IMPACT -->
+<div class="card">
+    <h3>Expected KPI Impact</h3>
+
+    <p><b>Revenue Growth</b></p>
+    <div class="progress">
+        <div class="progress-bar" style="width:{{ result.revenue }}%">
+            {{ result.revenue }}%
+        </div>
+    </div>
+
+    <p style="margin-top:15px"><b>Cost Efficiency</b></p>
+    <div class="progress">
+        <div class="progress-bar" style="width:{{ result.cost_efficiency }}%">
+            {{ result.cost_efficiency }}%
+        </div>
+    </div>
+
+    <p style="margin-top:15px"><b>Operational Stability</b></p>
+    <div class="progress">
+        <div class="progress-bar" style="width:{{ result.stability }}%">
+            {{ result.stability }}%
+        </div>
+    </div>
+</div>
+
+<!-- AI EXPLANATION -->
+<div class="card">
+    <h3>AI Explanation</h3>
+    <p>{{ result.explanation }}</p>
+</div>
+{% endblock %}

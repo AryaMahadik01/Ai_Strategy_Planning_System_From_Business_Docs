@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>System Analytics</h2>
+
+<p style="color:#64748b">
+Platform-level analytics providing insights into system usage,
+strategy trends, and risk distribution.
+</p>
+
+<!-- KPI SUMMARY -->
+<div class="kpi-row">
+    <div class="card">
+        <h4>Total Users</h4>
+        <h2>{{ total_users }}</h2>
+    </div>
+    <div class="card">
+        <h4>Total Documents</h4>
+        <h2>{{ total_docs }}</h2>
+    </div>
+</div>
+
+<!-- CHARTS -->
+<div class="kpi-row">
+    <div class="card" style="flex:1">
+        <h3>Strategy Intent Distribution</h3>
+        <canvas id="intentChart"></canvas>
+    </div>
+
+    <div class="card" style="flex:1">
+        <h3>Risk Distribution</h3>
+        <canvas id="riskChart"></canvas>
+    </div>
+</div>
+
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const intentCtx = document.getElementById('intentChart');
+new Chart(intentCtx, {
+    type: 'pie',
+    data: {
+        labels: {{ intent_labels | safe }},
+        datasets: [{
+            data: {{ intent_values | safe }}
+        }]
+    }
+});
+
+const riskCtx = document.getElementById('riskChart');
+new Chart(riskCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ risk_labels | safe }},
+        datasets: [{
+            label: 'Risk Occurrences',
+            data: {{ risk_values | safe }}
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+
+{% endblock %}

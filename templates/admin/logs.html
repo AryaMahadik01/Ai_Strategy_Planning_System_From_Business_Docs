@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Audit & Logs</h2>
+
+<div class="card">
+    <ul>
+        {% for log in logs %}
+            <li>
+                <b>{{ log.user }}</b> — {{ log.action }}
+                {% if log.filename %} ({{ log.filename }}) {% endif %}
+            </li>
+        {% else %}
+            <li>No logs available</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,10 +1,72 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>User Profile</h2>
+<h2>Account Settings</h2>
 
+<p style="color:#64748b">
+Manage your account information and view system-related details.
+</p>
+
+<!-- BASIC PROFILE -->
 <div class="card">
-    <p><b>Email:</b> {{ session.get('user') }}</p>
-    <p><b>Role:</b> {{ session.get('role') }}</p>
+    <h3>Profile Information</h3>
+
+    <p><b>Email Address</b><br>
+       {{ session.get('user') }}</p>
+
+    <p style="margin-top:10px"><b>User Role</b><br>
+       {{ session.get('role') | capitalize }}</p>
+
+    <p style="margin-top:10px"><b>Account Status</b><br>
+       Active</p>
 </div>
+
+<!-- SYSTEM USAGE -->
+<div class="card">
+    <h3>System Usage</h3>
+
+    <ul>
+        <li>AI Strategy Modules Enabled</li>
+        <li>Scenario Simulation Access</li>
+        <li>Consulting-Style Report Generation</li>
+    </ul>
+
+    <p style="color:#64748b">
+        Your account has access to all core AI-powered strategy planning features.
+    </p>
+</div>
+
+<!-- SECURITY -->
+<div class="card">
+    <h3>Security & Session</h3>
+
+    <p>
+        You are currently logged in as <b>{{ session.get('user') }}</b>.
+    </p>
+
+    <p style="color:#64748b">
+        For security reasons, password management and advanced settings
+        are handled by system administrators in this version.
+    </p>
+
+    <a href="/logout" style="display:inline-block; margin-top:10px">
+        🔒 Logout from Account
+    </a>
+</div>
+
+<!-- ABOUT -->
+<div class="card">
+    <h3>About StrategixAI</h3>
+
+    <p>
+        StrategixAI is an AI-powered decision support platform designed to
+        transform business documents into actionable strategic insights
+        using structured consulting frameworks.
+    </p>
+
+    <p style="color:#64748b">
+        Version: 1.0 · Industry-Grade Strategy Intelligence System
+    </p>
+</div>
+
 {% endblock %}

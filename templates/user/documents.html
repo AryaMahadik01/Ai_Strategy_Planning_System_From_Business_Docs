@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Business Documents</h2>
+
+<p style="color:#64748b">
+Upload and manage business documents used for AI-driven strategy planning.
+</p>
+
+<div class="card">
+    <h3>Upload New Document</h3>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="document" required>
+        <button type="submit">Upload & Analyze</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Your Documents</h3>
+    <ul>
+        {% for d in documents %}
+            <li>
+                <b>{{ d.filename }}</b><br>
+                <a href="/download/{{ d._id }}">⬇ Download Strategy Report</a>
+            </li>
+        {% else %}
+            <li>No documents uploaded yet</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

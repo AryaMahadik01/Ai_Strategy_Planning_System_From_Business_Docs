@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>User Behavior Analysis</h2>
+
+<div class="card">
+    <table width="100%">
+        <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Documents Uploaded</th>
+            <th>Status</th>
+        </tr>
+        {% for u in users %}
+        <tr>
+            <td>{{ u.email }}</td>
+            <td>{{ u.role }}</td>
+            <td>{{ usage.get(u.email, 0) }}</td>
+            <td>
+                {% if usage.get(u.email, 0) > 0 %}
+                    Active
+                {% else %}
+                    Inactive
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

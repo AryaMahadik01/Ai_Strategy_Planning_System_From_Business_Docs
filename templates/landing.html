@@ -14,9 +14,15 @@
         strategies, insights, and decision intelligence.
     </p>
     <div class="hero-buttons">
+    {% if session.get('user') %}
+        <a href="/user/dashboard" class="btn primary">Go to Dashboard</a>
+        <a href="/logout" class="btn secondary">Logout</a>
+    {% else %}
         <a href="/login" class="btn primary">Login</a>
         <a href="/register" class="btn secondary">Get Started</a>
-    </div>
+    {% endif %}
+</div>
+
 </section>
 
 <section class="features">

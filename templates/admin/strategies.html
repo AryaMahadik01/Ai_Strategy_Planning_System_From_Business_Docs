@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Strategy Pattern Insights</h2>
+
+<div class="card">
+    <ul>
+        {% for strategy, count in strategy_count.items() %}
+            <li><b>{{ strategy }}</b> — {{ count }} occurrences</li>
+        {% else %}
+            <li>No strategy data available</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

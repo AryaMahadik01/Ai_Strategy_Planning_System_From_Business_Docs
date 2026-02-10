@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Performance & KPIs</h2>
+
+<p style="color:#64748b">
+Visual performance indicators reflecting strategic readiness,
+growth progress, and risk exposure.
+</p>
+
+<!-- SCORE CARDS -->
+<div class="kpi-row">
+    <div class="card">
+        <h4>Strategy Readiness</h4>
+        <h2>{{ scores.readiness }}%</h2>
+        <p style="color:#22c55e">Strong</p>
+    </div>
+
+    <div class="card">
+        <h4>Business Maturity</h4>
+        <h2>{{ scores.maturity }}%</h2>
+        <p style="color:#38bdf8">Growing</p>
+    </div>
+
+    <div class="card">
+        <h4>Digital Transformation</h4>
+        <h2>{{ scores.digital }}%</h2>
+        <p style="color:#f59e0b">In Progress</p>
+    </div>
+
+    <div class="card">
+        <h4>Risk Exposure</h4>
+        <h2>{{ scores.risk }}%</h2>
+        <p style="color:#22c55e">Manageable</p>
+    </div>
+</div>
+
+<!-- KPI BAR CHART -->
+<div class="card">
+    <h3>KPI Progress Overview</h3>
+    <canvas id="kpiChart"></canvas>
+</div>
+
+<!-- TREND ANALYSIS -->
+<div class="card">
+    <h3>Growth vs Risk Trend</h3>
+    <canvas id="trendChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// KPI BAR CHART
+new Chart(document.getElementById("kpiChart"), {
+    type: "bar",
+    data: {
+        labels: {{ kpi_labels | safe }},
+        datasets: [{
+            label: "KPI Achievement (%)",
+            data: {{ kpi_values | safe }}
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100
+            }
+        }
+    }
+});
+
+// TREND LINE CHART
+new Chart(document.getElementById("trendChart"), {
+    type: "line",
+    data: {
+        labels: {{ trend_labels | safe }},
+        datasets: [
+            {
+                label: "Growth Trend",
+                data: {{ growth_trend | safe }}
+            },
+            {
+                label: "Risk Trend",
+                data: {{ risk_trend | safe }}
+            }
+        ]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100
+            }
+        }
+    }
+});
+</script>
+
+{% endblock %}

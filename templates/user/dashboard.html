@@ -1,39 +1,65 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Strategy Overview</h2>
+<h2>Strategy Workspace</h2>
 
+<p style="color:#64748b">
+Your personalized AI-powered strategy planning environment.
+</p>
+
+<!-- STRATEGY STATUS -->
 <div class="kpi-row">
     <div class="card">
-        <h4>Documents Analyzed</h4>
+        <h4>Documents Uploaded</h4>
         <h2>{{ documents | length }}</h2>
+        <p style="color:#64748b">Business inputs</p>
     </div>
+
     <div class="card">
-        <h4>Primary Intent</h4>
+        <h4>Strategy Readiness</h4>
+        <h2>78%</h2>
+        <p style="color:#22c55e">Strong</p>
+    </div>
+
+    <div class="card">
+        <h4>Primary Focus</h4>
         <h2>Growth</h2>
+        <p style="color:#64748b">Expansion</p>
     </div>
+
     <div class="card">
-        <h4>Risk Level</h4>
+        <h4>Risk Exposure</h4>
         <h2>Medium</h2>
-    </div>
-    <div class="card">
-        <h4>Strategy Confidence</h4>
-        <h2>75%</h2>
+        <p style="color:#f59e0b">Manageable</p>
     </div>
 </div>
 
+<!-- DOCUMENT ACTIVITY -->
 <div class="card">
-    <h3>Uploaded Documents</h3>
+    <h3>Recent Business Documents</h3>
+
     <ul>
-        {% for d in documents %}
+        {% for d in documents[:3] %}
             <li>
-                <b>{{ d.filename }}</b>
-                <br>
-                <a href="/download/{{ d._id }}">⬇ Download Report</a>
+                <b>{{ d.filename }}</b><br>
+                <a href="/user/overview">View Strategy →</a>
             </li>
         {% else %}
-            <li>No documents uploaded yet</li>
+            <li>No documents uploaded yet.</li>
         {% endfor %}
+    </ul>
+
+    <a href="/user/documents">📂 Manage Documents</a>
+</div>
+
+<!-- NEXT ACTIONS -->
+<div class="card">
+    <h3>Recommended Next Actions</h3>
+    <ul>
+        <li>📄 Upload additional business data</li>
+        <li>🧠 Review AI strategic insights</li>
+        <li>🔄 Simulate alternative scenarios</li>
+        <li>📑 Download executive report</li>
     </ul>
 </div>
 {% endblock %}
