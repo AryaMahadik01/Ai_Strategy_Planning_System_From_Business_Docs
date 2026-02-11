@@ -19,5 +19,25 @@
 
 </div>
 
+<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+    <div style="width: 50px; height: 50px; border: 5px solid #e2e8f0; border-top: 5px solid #4f46e5; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+    <h3 style="margin-top: 20px; color: #1e293b;">Analyzing Document...</h3>
+    <p style="color: #64748b;">Extracting entities, calculating risk scores, and generating strategy.</p>
+</div>
+
+<style>
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+
+<script>
+    // Show loader when any form with class 'upload-form' is submitted
+    document.addEventListener("submit", function(e) {
+        const form = e.target;
+        if (form.getAttribute("enctype") === "multipart/form-data") {
+            document.getElementById("loadingOverlay").style.display = "flex";
+        }
+    });
+</script>
+
 </body>
 </html>

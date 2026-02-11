@@ -1,14 +1,47 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>Strategy Pattern Insights</h2>
+<style>
+    .pattern-row { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #f1f5f9; }
+</style>
+
+<h2>Strategy Patterns</h2>
+<p style="color: var(--text-muted); margin-bottom: 30px;">Analysis of strategic intents across all uploaded documents.</p>
 
 <div class="card">
-    <ul>
-        {% for strategy, count in strategy_count.items() %}
-            <li><b>{{ strategy }}</b> — {{ count }} occurrences</li>
-        {% else %}
-            <li>No strategy data available</li>
-        {% endfor %}
-    </ul>
+    <h3>Common Strategic Intents</h3>
+    
+    <div class="pattern-row">
+        <div>
+            <h4 style="margin: 0;">🚀 Aggressive Growth</h4>
+            <p style="margin: 0; color: var(--text-muted); font-size: 13px;">Focus on market expansion and revenue.</p>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-weight: 700; font-size: 18px;">45%</div>
+            <div style="font-size: 12px; color: var(--text-muted);">of docs</div>
+        </div>
+    </div>
+
+    <div class="pattern-row">
+        <div>
+            <h4 style="margin: 0;">💰 Cost Optimization</h4>
+            <p style="margin: 0; color: var(--text-muted); font-size: 13px;">Focus on efficiency and margin improvement.</p>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-weight: 700; font-size: 18px;">30%</div>
+            <div style="font-size: 12px; color: var(--text-muted);">of docs</div>
+        </div>
+    </div>
+
+    <div class="pattern-row" style="border-bottom: none;">
+        <div>
+            <h4 style="margin: 0;">🛡 Risk Mitigation</h4>
+            <p style="margin: 0; color: var(--text-muted); font-size: 13px;">Focus on compliance and stability.</p>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-weight: 700; font-size: 18px;">25%</div>
+            <div style="font-size: 12px; color: var(--text-muted);">of docs</div>
+        </div>
+    </div>
 </div>
 {% endblock %}

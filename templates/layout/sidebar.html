@@ -1,52 +1,56 @@
 <div class="sidebar">
     <div class="logo">StrategixAI</div>
-    <div class="profile">
-        <p>{{ session.get('user') }}</p>
+    
+    <div class="profile" style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #334155;">
+        <p style="color: #94a3b8; font-size: 13px;">LOGGED IN AS</p>
+        <p style="font-weight: 600;">{{ session.get('user') }}</p>
     </div>
 
-    {% if session.get('role') == 'user' %}
+    <div class="sidebar-nav">
+        
+        {% if session.get('role') == 'user' %}
+            <div class="nav-section">
+                <p class="nav-title">HOME</p>
+                <a href="/user/dashboard">🏠 Dashboard</a>
+                <a href="/user/documents">📂 Business Documents</a>
+            </div>
 
-        <div class="nav-section">
-            <p class="nav-title">HOME</p>
-            <a href="/user/dashboard">🏠 Dashboard</a>
-            <a href="/user/documents">📂 Business Documents</a>
-        </div>
+            <div class="nav-section">
+                <p class="nav-title">STRATEGY</p>
+                <a href="/user/overview">📊 Strategy Overview</a>
+                <a href="/user/insights">🧠 AI Insights</a>
+                <a href="/user/performance">📈 Performance & KPIs</a>
+                <a href="/user/scenarios">🔄 Scenario Comparison</a>
+                <a href="/user/chat">💬 Chat with Document</a>
+                <a href="/user/compare">🆚 Strategy Comparison</a>
+            </div>
 
-        <div class="nav-section">
-            <p class="nav-title">STRATEGY</p>
-            <a href="/user/overview">📊 Strategy Overview</a>
-            <a href="/user/insights">🧠 AI Insights</a>
-            <a href="/user/performance">📈 Performance & KPIs</a>
-            <a href="/user/scenarios">🔄 Scenario Comparison</a>
-            <a href="/user/compare">🆚 Strategy Comparison</a>
+            <div class="nav-section">
+                <p class="nav-title">OUTPUT</p>
+                <a href="/user/reports">📄 Reports & Exports</a>
+            </div>
 
-        </div>
+            <div class="nav-section">
+                <p class="nav-title">ACCOUNT</p>
+                <a href="/user/profile">⚙️ Settings</a>
+            </div>
+        {% endif %}
 
-        <div class="nav-section">
-            <p class="nav-title">OUTPUT</p>
-            <a href="/user/reports">📄 Reports & Exports</a>
-        </div>
-
-        <div class="nav-section">
-            <p class="nav-title">ACCOUNT</p>
-            <a href="/profile">⚙️ Settings</a>
-        </div>
-
-    {% endif %}
-
-    {% if session.get('role') == 'admin' %}
-        <div class="nav-section">
-            <p class="nav-title">ADMIN</p>
-            <a href="/admin/analytics">📊 System Analytics</a>
-            <a href="/admin/users">🧑 User Behavior</a>
-            <a href="/admin/strategies">🧠 Strategy Patterns</a>
-            <a href="/admin/risks">⚠️ Risk Heatmaps</a>
-            <a href="/admin/logs">📄 Audit & Logs</a>
-        </div>
-    {% endif %}
-
-    <hr>
-
-    <a href="/logout">🚪 Logout</a>
+        {% if session.get('role') == 'admin' %}
+            <div class="nav-section">
+                <p class="nav-title">ADMIN CONTROL</p>
+                <a href="/admin/dashboard">🖥 Admin Dashboard</a>
+                <a href="/admin/analytics">📊 System Analytics</a>
+                <a href="/admin/users">🧑 Users Management</a>
+                <a href="/admin/strategies">🧠 Strategy Patterns</a>
+                <a href="/admin/risks">⚠️ Risk Heatmaps</a>
+                <a href="/admin/logs">📄 Audit & Logs</a>
+            </div>
+        {% endif %}
+        
+    </div>
+    <div style="border-top: 1px solid #334155; padding-top: 15px;">
+        <a href="/logout" style="color: #ef4444;">🚪 Logout</a>
+    </div>
 
 </div>

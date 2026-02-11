@@ -3,67 +3,62 @@
 {% block content %}
 <h2>Reports & Exports</h2>
 
-<p style="color:#64748b">
-Access and download AI-generated consulting-style strategy reports based on
-your uploaded business documents.
+<p style="color: var(--text-muted); margin-bottom: 30px;">
+    Generate and download executive-grade strategy documents.
 </p>
 
-<!-- REPORT OVERVIEW -->
-<div class="kpi-row">
-    <div class="card">
-        <h4>Report Type</h4>
-        <p>Executive Strategy Report</p>
-    </div>
-
-    <div class="card">
-        <h4>Frameworks Included</h4>
-        <p>SWOT · PESTLE · Five Forces</p>
-    </div>
-
-    <div class="card">
-        <h4>Planning Horizon</h4>
-        <p>12–24 Months</p>
-    </div>
-
-    <div class="card">
-        <h4>Format</h4>
-        <p>Professional PDF</p>
+<div class="card" style="background: linear-gradient(to right, #4f46e5, #818cf8); color: white; border: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h3 style="color: white; margin-bottom: 8px;">Executive Strategy Report</h3>
+            <p style="opacity: 0.9; margin: 0; max-width: 600px;">
+                A comprehensive PDF including Executive Summary, SWOT, PESTLE, Porter's Five Forces, 
+                and a Prioritized Strategy Roadmap. Perfect for board presentations.
+            </p>
+        </div>
+        <div style="font-size: 40px; opacity: 0.2;">📄</div>
     </div>
 </div>
 
-<!-- AVAILABLE REPORTS -->
-<div class="card">
-    <h3>Available Strategy Reports</h3>
+<h3 style="margin-top: 40px;">Available Downloads</h3>
 
-    <p style="color:#64748b">
-        Each report is generated using AI-driven strategic analysis and follows
-        a consulting-style structure suitable for executive decision-making.
-    </p>
+{% if documents %}
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+    {% for d in documents %}
+    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 200px;">
+        
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                <div style="width: 40px; height: 40px; background: #e0e7ff; color: #4f46e5; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    PDF
+                </div>
+                <span style="background: #f1f5f9; color: #64748b; font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: 600;">
+                    READY
+                </span>
+            </div>
+            
+            <h4 style="margin: 0 0 5px 0; font-size: 16px;">{{ d.filename }}</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">
+                Analyzed on: {{ d.created_at.strftime('%b %d, %Y') if d.created_at else 'Recent' }}
+            </p>
+        </div>
 
-    <ul>
-        {% for d in documents %}
-            <li style="margin-bottom:15px">
-                <b>{{ d.filename }}</b><br>
-                <span style="color:#64748b">
-                    Includes: Executive Summary, Strategic Diagnosis, Roadmap, KPIs, Risk Analysis
-                </span><br>
-                <a href="/download/{{ d._id }}">⬇ Download Strategy Report (PDF)</a>
-            </li>
-        {% else %}
-            <li>No reports available yet. Upload a business document to generate reports.</li>
-        {% endfor %}
-    </ul>
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+            <a href="/download/{{ d._id }}" class="btn" style="width: 100%; text-align: center; display: block;">
+                ⬇ Download Report
+            </a>
+        </div>
+
+    </div>
+    {% endfor %}
 </div>
-
-<!-- REPORT EXPLANATION -->
-<div class="card">
-    <h3>About These Reports</h3>
-    <p>
-        The AI Strategy Reports are designed to replicate the structure and
-        depth of professional consulting deliverables. They combine multiple
-        strategic frameworks, KPI-based performance indicators, and risk
-        assessments into a single executive-ready document.
-    </p>
-</div>
+{% else %}
+    <div class="card" style="text-align: center; padding: 60px;">
+        <div style="font-size: 48px; margin-bottom: 20px;">📂</div>
+        <h3>No Reports Available</h3>
+        <p style="color: var(--text-muted);">Upload a business document to generate your first strategy report.</p>
+        <a href="/user/documents" class="btn secondary" style="margin-top: 10px;">Go to Uploads</a>
+    </div>
+{% endif %}
 
 {% endblock %}

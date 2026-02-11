@@ -1,15 +1,39 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>Risk Heatmaps</h2>
+<style>
+    .risk-card { display: flex; justify-content: space-between; align-items: center; padding: 15px; margin-bottom: 10px; border-radius: 8px; background: #fff; border: 1px solid #e2e8f0; }
+    .risk-high { border-left: 4px solid var(--danger); }
+    .risk-med { border-left: 4px solid var(--warning); }
+</style>
+
+<h2>Risk Heatmap</h2>
+<p style="color: var(--text-muted); margin-bottom: 30px;">Documents flagged with high strategic risk exposure.</p>
 
 <div class="card">
-    <p>Aggregated risk exposure across all analyzed businesses.</p>
-    <ul>
-        {% for risk, count in risk_count.items() %}
-            <li>⚠ {{ risk }} — {{ count }} occurrences</li>
-        {% else %}
-            <li>No risk data available</li>
-        {% endfor %}
-    </ul>
+    <h3>High Risk Alerts</h3>
+    
+    <div class="risk-card risk-high">
+        <div>
+            <div style="font-weight: 600;">Financial_Report_Q3.pdf</div>
+            <div style="font-size: 12px; color: var(--text-muted);">User: arya@gmail.com</div>
+        </div>
+        <div style="text-align: right;">
+            <div style="color: var(--danger); font-weight: 700;">Critical (85%)</div>
+            <div style="font-size: 11px;">Regulatory Threats Detected</div>
+        </div>
+    </div>
+
+    <div class="risk-card risk-med">
+        <div>
+            <div style="font-weight: 600;">Expansion_Plan_2026.docx</div>
+            <div style="font-size: 12px; color: var(--text-muted);">User: ceo@startup.com</div>
+        </div>
+        <div style="text-align: right;">
+            <div style="color: var(--warning); font-weight: 700;">Medium (62%)</div>
+            <div style="font-size: 11px;">Operational Inefficiency</div>
+        </div>
+    </div>
+
 </div>
 {% endblock %}

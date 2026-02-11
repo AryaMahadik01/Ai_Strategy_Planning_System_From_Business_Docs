@@ -2,62 +2,174 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>StrategixAI – AI Strategy Planning</title>
+    <title>StrategixAI – Enterprise Strategy Intelligence</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
 <section class="hero">
-    <h1>AI-Powered Strategy Planning<br>From Business Documents</h1>
+    <h1>Turn Documents into <br> Boardroom Strategy.</h1>
     <p>
-        Convert raw business documents into executive-level
-        strategies, insights, and decision intelligence.
+        Upload business plans, financial reports, or proposals. 
+        Our AI extracts SWOT, PESTLE, and Strategic Roadmaps in seconds.
     </p>
+    
     <div class="hero-buttons">
     {% if session.get('user') %}
-        <a href="/user/dashboard" class="btn primary">Go to Dashboard</a>
-        <a href="/logout" class="btn secondary">Logout</a>
+        <a href="/user/dashboard" class="btn">Go to Dashboard →</a>
     {% else %}
-        <a href="/login" class="btn primary">Login</a>
-        <a href="/register" class="btn secondary">Get Started</a>
+        <a href="/register" class="btn">Start Free Analysis</a>
+        <a href="/login" class="btn secondary" style="color:#cbd5e1; border-color:#334155; margin-left:10px;">Login</a>
     {% endif %}
-</div>
-
+    </div>
 </section>
 
 <section class="features">
-    <h2>What We Do</h2>
+    <div style="text-align: center; margin-bottom: 60px;">
+        <h2 style="color: #0f172a; font-size: 36px;">Why Top Executives Choose StrategixAI</h2>
+        <p style="color: #64748b;">Complex strategic frameworks, automated instantly.</p>
+    </div>
+
     <div class="feature-grid">
-        <div class="feature-card">
-            <h3>📄 Document Intelligence</h3>
-            <p>AI understands context, risks, and business goals.</p>
+        <div class="card" style="text-align: left;">
+            <div style="font-size: 32px; margin-bottom: 15px;">📄</div>
+            <h3>Document Intelligence</h3>
+            <p style="color: #64748b;">Upload PDF/DOCX. Our NLP engine reads between the lines to find hidden risks and opportunities.</p>
         </div>
-        <div class="feature-card">
-            <h3>🧠 Strategic Insights</h3>
-            <p>SWOT, KPIs, and strategy recommendations.</p>
+        
+        <div class="card" style="text-align: left;">
+            <div style="font-size: 32px; margin-bottom: 15px;">📊</div>
+            <h3>Live Dashboards</h3>
+            <p style="color: #64748b;">Visualize your Strategy Readiness and Risk Exposure with real-time dynamic charts.</p>
         </div>
-        <div class="feature-card">
-            <h3>📊 Decision Support</h3>
-            <p>Data-driven insights for executives.</p>
+        
+        <div class="card" style="text-align: left;">
+            <div style="font-size: 32px; margin-bottom: 15px;">🧠</div>
+            <h3>Scenario Simulation</h3>
+            <p style="color: #64748b;">"What if we focus on Growth?" Simulate strategic pivots and see the impact on KPIs instantly.</p>
         </div>
-        <div class="feature-card">
-            <h3>📑 Professional Reports</h3>
-            <p>Download consulting-style PDF reports.</p>
+
+        <div class="card" style="text-align: left;">
+            <div style="font-size: 32px; margin-bottom: 15px;">💬</div>
+            <h3>AI Consultant Chat</h3>
+            <p style="color: #64748b;">Don't just read reports. Chat with your documents to get specific answers about budgets and competitors.</p>
         </div>
     </div>
 </section>
 
-<section class="how">
-    <h2>How It Works</h2>
-    <ol>
-        <li>Upload your business document</li>
-        <li>AI analyzes strategy and risks</li>
-        <li>Get actionable recommendations</li>
-    </ol>
+<section class="testimonials">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h2 style="color: #0f172a; font-size: 36px;">Trusted by Industry Leaders</h2>
+        <p style="color: #64748b;">See what strategy directors and consultants are saying.</p>
+    </div>
+
+    <div class="testimonial-grid">
+        
+        <div class="testimonial-card" style="border-top: 4px solid #4f46e5;"> <div class="quote-icon">“</div>
+            <div class="stars">★★★★★</div>
+            <p class="review-text">
+                StrategixAI cut our strategic planning time by 70%. The SWOT extraction is frighteningly accurate and the PDF reports are board-ready immediately.
+            </p>
+            <div class="user-profile">
+                <div class="avatar-circle" style="background: #4f46e5;">JS</div>
+                <div class="user-info">
+                    <h4>James Sullivan</h4>
+                    <span>Director of Strategy, TechCorp</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="testimonial-card" style="border-top: 4px solid #f59e0b;"> <div class="quote-icon">“</div>
+            <div class="stars">★★★★★</div>
+            <p class="review-text">
+                I used to spend days reading competitor annual reports. Now I just upload them here, and I get a full risk profile in seconds. A game changer.
+            </p>
+            <div class="user-profile">
+                <div class="avatar-circle" style="background: #f59e0b;">AL</div>
+                <div class="user-info">
+                    <h4>Anita Lopez</h4>
+                    <span>Senior Consultant, MBB Firm</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="testimonial-card" style="border-top: 4px solid #ec4899;"> <div class="quote-icon">“</div>
+            <div class="stars">★★★★★</div>
+            <p class="review-text">
+                The scenario simulation feature is brilliant. Being able to toggle between 'Growth' and 'Risk' modes helps us prepare for any market condition.
+            </p>
+            <div class="user-profile">
+                <div class="avatar-circle" style="background: #ec4899;">MK</div>
+                <div class="user-info">
+                    <h4>Michael Khan</h4>
+                    <span>COO, Logistics Global</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="testimonial-card" style="border-top: 4px solid #10b981;"> <div class="quote-icon">“</div>
+            <div class="stars">★★★★☆</div>
+            <p class="review-text">
+                Finally, a tool that understands business context. It picked up on subtle regulatory risks in our documents that our junior analysts missed.
+            </p>
+            <div class="user-profile">
+                <div class="avatar-circle" style="background: #10b981;">SR</div>
+                <div class="user-info">
+                    <h4>Sarah Ross</h4>
+                    <span>VP of Operations, FinServe</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </section>
 
-<footer>
-    <p>© 2026 StrategixAI. All rights reserved.</p>
+<footer class="site-footer">
+    <div class="footer-container">
+        
+        <div class="footer-col">
+            <h3 style="font-size: 20px; font-weight: 800; letter-spacing: -0.5px;">StrategixAI</h3>
+            <p>
+                The enterprise standard for AI-driven strategic planning and document intelligence.
+            </p>
+            <p style="font-size: 12px; opacity: 0.6;">San Francisco, CA</p>
+        </div>
+
+        <div class="footer-col">
+            <h3>Product</h3>
+            <ul class="footer-links">
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="#">Enterprise</a></li>
+                <li><a href="#">Security</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Company</h3>
+            <ul class="footer-links">
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Careers</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Legal</h3>
+            <ul class="footer-links">
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Cookie Policy</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2026 StrategixAI Inc. All rights reserved.</p>
+    </div>
 </footer>
 
 </body>

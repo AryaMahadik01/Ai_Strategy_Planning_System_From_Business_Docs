@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>AI Document Assistant</h2>
+<p style="color:#64748b">Ask questions about <b>{{ doc.filename }}</b></p>
+
+<div class="card" style="height: 500px; display: flex; flex-direction: column;">
+    
+    <div id="chat-box" style="flex: 1; overflow-y: auto; padding: 10px; border-bottom: 1px solid #eee; margin-bottom: 15px;">
+        <div style="margin-bottom: 10px;">
+            <span style="background: #e0f2fe; padding: 8px 12px; border-radius: 12px; display: inline-block; color: #0284c7;">
+                👋 Hi! I've analyzed your document. Ask me anything about strategies, risks, or financial details.
+            </span>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+        <input type="text" id="user-input" placeholder="e.g., What are the main risks?" 
+               style="flex: 1; padding: 12px; border: 1px solid #cbd5f5; border-radius: 6px;">
+        <button onclick="sendMessage()" style="width: 100px; background: #38bdf8; color: white; border: none; border-radius: 6px; cursor: pointer;">
+            Ask AI
+        </button>
+    </div>
+</div>
+
+<script>
+    async function sendMessage() {
+        let input = document.getElementById("user-input");
+        let chatBox = document.getElementById("chat-box");
+        let question = input.value.trim();
+
+        if (!question) return;
+
+        // 1. Show User Message
+        chatBox.innerHTML += `
+            <div style="text-align: right; margin-bottom: 10px;">
+                <span style="background: #38bdf8; color: white; padding: 8px 12px; border-radius: 12px; display: inline-block;">
+                    ${question}
+                </span>
+            </div>
+        `;
+        
+        input.value = ""; 
+        chatBox.scrollTop = chatBox.scrollHeight; 
+
+        // 2. Send to Backend with Error Handling
+        try {
+            let response = await fetch("/user/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ question: question })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server Error: ${response.status}`);
+            }
+
+            let data = await response.json();
+
+            // 3. Show AI Response
+            chatBox.innerHTML += `
+                <div style="margin-bottom: 10px;">
+                    <span style="background: #f1f5f9; color: #334155; padding: 8px 12px; border-radius: 12px; display: inline-block;">
+                        ${data.answer}
+                    </span>
+                </div>
+            `;
+        } catch (error) {
+            console.error(error);
+            chatBox.innerHTML += `
+                <div style="margin-bottom: 10px;">
+                    <span style="background: #fee2e2; color: #b91c1c; padding: 8px 12px; border-radius: 12px; display: inline-block;">
+                        ⚠️ Error: AI is not responding. Check the terminal for details.
+                    </span>
+                </div>
+            `;
+        }
+        
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    
+    // Allow "Enter" key to send
+    document.getElementById("user-input").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") sendMessage();
+    });
+</script>
+{% endblock %}

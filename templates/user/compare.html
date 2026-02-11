@@ -7,52 +7,68 @@
 Compare two business documents to evaluate strategic strength and effectiveness.
 </p>
 
-<!-- DOCUMENT SELECTOR -->
 <div class="card">
     <h3>Select Documents</h3>
     <form method="POST">
-        <select name="doc1" required>
-            <option value="">Select First Document</option>
-            {% for d in documents %}
-                <option value="{{ d._id }}">{{ d.filename }}</option>
-            {% endfor %}
-        </select>
+        <div style="display:flex; gap:10px;">
+            <select name="doc1" required style="flex:1">
+                <option value="">Select First Document</option>
+                {% for d in documents %}
+                    <option value="{{ d._id }}">{{ d.filename }}</option>
+                {% endfor %}
+            </select>
 
-        <select name="doc2" required style="margin-top:10px">
-            <option value="">Select Second Document</option>
-            {% for d in documents %}
-                <option value="{{ d._id }}">{{ d.filename }}</option>
-            {% endfor %}
-        </select>
+            <select name="doc2" required style="flex:1">
+                <option value="">Select Second Document</option>
+                {% for d in documents %}
+                    <option value="{{ d._id }}">{{ d.filename }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-        <button type="submit" style="margin-top:15px">
-            Compare Strategies
+        <button type="submit" style="margin-top:15px; width:100%">
+            Run Comparative Analysis
         </button>
     </form>
 </div>
 
 {% if comparison %}
-<!-- COMPARISON RESULT -->
 <div class="kpi-row">
-    <div class="card">
+    <div class="card" style="border-top: 4px solid #38bdf8;">
         <h4>{{ comparison.doc1.name }}</h4>
-        <p><b>Focus:</b> {{ comparison.doc1.focus }}</p>
-        <p><b>Strength Score:</b> {{ comparison.doc1.score }}/100</p>
-        <p><b>Risk Level:</b> {{ comparison.doc1.risk }}</p>
+        <p style="color:#64748b">{{ comparison.doc1.focus }}</p>
+        
+        <p style="margin-top:10px"><b>Readiness:</b> {{ comparison.doc1.readiness }}%</p>
+        <div class="progress"><div class="progress-bar" style="width:{{ comparison.doc1.readiness }}%"></div></div>
+
+        <p style="margin-top:10px"><b>Risk Score:</b> {{ comparison.doc1.risk }}%</p>
+        <div class="progress"><div class="progress-bar" style="width:{{ comparison.doc1.risk }}%; background:#ef4444"></div></div>
     </div>
 
-    <div class="card">
+    <div style="display:flex; align-items:center; font-weight:bold; color:#94a3b8; font-size:20px;">
+        VS
+    </div>
+
+    <div class="card" style="border-top: 4px solid #22c55e;">
         <h4>{{ comparison.doc2.name }}</h4>
-        <p><b>Focus:</b> {{ comparison.doc2.focus }}</p>
-        <p><b>Strength Score:</b> {{ comparison.doc2.score }}/100</p>
-        <p><b>Risk Level:</b> {{ comparison.doc2.risk }}</p>
+        <p style="color:#64748b">{{ comparison.doc2.focus }}</p>
+        
+        <p style="margin-top:10px"><b>Readiness:</b> {{ comparison.doc2.readiness }}%</p>
+        <div class="progress"><div class="progress-bar" style="width:{{ comparison.doc2.readiness }}%"></div></div>
+
+        <p style="margin-top:10px"><b>Risk Score:</b> {{ comparison.doc2.risk }}%</p>
+        <div class="progress"><div class="progress-bar" style="width:{{ comparison.doc2.risk }}%; background:#ef4444"></div></div>
     </div>
 </div>
 
 <div class="card">
-    <h3>AI Recommendation</h3>
-    <p><b>Stronger Strategy:</b> {{ comparison.winner }}</p>
-    <p>{{ comparison.explanation }}</p>
+    <h3>AI Verdict</h3>
+    <p style="font-size:18px; color:#0f172a;">
+        🏆 <b>Winner:</b> {{ comparison.winner }}
+    </p>
+    <p style="color:#475569; line-height:1.6;">
+        {{ comparison.explanation }}
+    </p>
 </div>
 {% endif %}
 

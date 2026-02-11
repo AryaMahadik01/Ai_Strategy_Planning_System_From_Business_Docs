@@ -1,39 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Admin Dashboard</h2>
+<style>
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 30px; }
+</style>
 
-<div class="card">
-    <p><b>Total Users:</b> {{ total_users }}</p>
-    <p><b>Total Documents:</b> {{ total_documents }}</p>
+<div class="admin-header">
+    <div>
+        <h2>System Administration</h2>
+        <p style="color: var(--text-muted);">Overview of platform activity and health.</p>
+    </div>
+    <span style="background: #e0e7ff; color: var(--primary); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;">
+        ● System Operational
+    </span>
+</div>
+
+<div class="stat-grid">
+    <div class="card" style="border-left: 4px solid var(--primary);">
+        <p style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 600;">TOTAL USERS</p>
+        <h2 style="font-size: 32px; margin: 5px 0;">{{ stats.total_users }}</h2>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--success);">
+        <p style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 600;">DOCUMENTS PROCESSED</p>
+        <h2 style="font-size: 32px; margin: 5px 0;">{{ stats.total_docs }}</h2>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--warning);">
+        <p style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 600;">AVG RISK SCORE</p>
+        <h2 style="font-size: 32px; margin: 5px 0;">{{ stats.avg_risk }}%</h2>
+    </div>
+    <div class="card" style="border-left: 4px solid #64748b;">
+        <p style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 600;">AI REQUESTS</p>
+        <h2 style="font-size: 32px; margin: 5px 0;">{{ stats.total_logs }}</h2>
+    </div>
 </div>
 
 <div class="card">
-    <h3>Business Intent Distribution</h3>
-    <ul>
-        {% for intent, count in intent_stats.items() %}
-            <li>{{ intent }} : {{ count }}</li>
-        {% else %}
-            <li>No intent data available</li>
-        {% endfor %}
-    </ul>
-</div>
-
-<div class="card">
-    <h3>Registered Users</h3>
-    <ul>
-        {% for u in users %}
-            <li>{{ u.name }} ({{ u.email }}) – {{ u.role }}</li>
-        {% endfor %}
-    </ul>
-</div>
-
-<div class="card">
-    <h3>Uploaded Documents</h3>
-    <ul>
-        {% for d in documents %}
-            <li>{{ d.filename }} – {{ d.user }}</li>
-        {% endfor %}
-    </ul>
+    <h3>Admin Quick Actions</h3>
+    <div style="display: flex; gap: 15px; margin-top: 15px;">
+        <a href="/admin/users" class="btn secondary">Manage Users</a>
+        <a href="/admin/logs" class="btn secondary">View Security Logs</a>
+        <a href="/admin/risks" class="btn secondary" style="color: var(--danger); border-color: #fca5a5;">Investigate Risks</a>
+    </div>
 </div>
 {% endblock %}

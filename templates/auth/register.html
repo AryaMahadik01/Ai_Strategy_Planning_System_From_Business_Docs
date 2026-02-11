@@ -1,25 +1,47 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - StrategixAI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
 
-{% block content %}
-<h2>Register</h2>
+    <div class="auth-container">
+        <div class="auth-card">
+            
+            <div class="auth-logo">StrategixAI</div>
+            <div class="auth-title">Create your account</div>
 
-<div class="card">
-    <form method="POST">
-        <input type="text" name="name" placeholder="Full Name" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div style="background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 20px;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
-        <select name="role">
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-        </select>
+            <form method="POST">
+                <div style="text-align: left; margin-bottom: 5px; font-size: 13px; font-weight: 500; color: #64748b;">Full Name</div>
+                <input type="text" name="name" placeholder="John Doe" required>
 
-        <button type="submit">Create Account</button>
-    </form>
+                <div style="text-align: left; margin-bottom: 5px; font-size: 13px; font-weight: 500; color: #64748b;">Email Address</div>
+                <input type="email" name="email" placeholder="name@company.com" required>
 
-    <p style="margin-top:10px">
-        Already have an account?
-        <a href="/login"><b>Login</b></a>
-    </p>
-</div>
-{% endblock %}
+                <div style="text-align: left; margin-bottom: 5px; font-size: 13px; font-weight: 500; color: #64748b;">Password</div>
+                <input type="password" name="password" placeholder="Create a password" required>
+
+                <button type="submit" style="width: 100%; margin-top: 10px;">Get Started</button>
+            </form>
+
+            <div class="auth-footer">
+                Already have an account? <a href="/login">Sign in</a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

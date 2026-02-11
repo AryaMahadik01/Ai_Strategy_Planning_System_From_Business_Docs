@@ -3,86 +3,77 @@
 {% block content %}
 <h2>AI Strategic Insights</h2>
 
+{% if error %}
+    <div class="card"><p>{{ error }} <a href="/user/documents">Upload a document first.</a></p></div>
+{% else %}
+
 <p style="color:#64748b">
-Structured strategic diagnosis generated using established
-business frameworks.
+    Analysis for: <b>{{ doc.filename }}</b>
 </p>
 
-<!-- SWOT ANALYSIS -->
 <div class="card">
     <h3>SWOT Analysis</h3>
-
     <div class="kpi-row">
         <div class="card">
             <h4>Strengths</h4>
             <ul>
-                <li>Strong brand positioning</li>
-                <li>Experienced leadership team</li>
+                {% for item in doc.swot.strengths %}
+                    <li>{{ item }}</li>
+                {% endfor %}
             </ul>
         </div>
-
         <div class="card">
             <h4>Weaknesses</h4>
             <ul>
-                <li>Operational inefficiencies</li>
-                <li>High dependency on few markets</li>
+                {% for item in doc.swot.weaknesses %}
+                    <li>{{ item }}</li>
+                {% endfor %}
             </ul>
         </div>
     </div>
-
     <div class="kpi-row">
         <div class="card">
             <h4>Opportunities</h4>
             <ul>
-                <li>Growing market demand</li>
-                <li>Digital transformation potential</li>
+                {% for item in doc.swot.opportunities %}
+                    <li>{{ item }}</li>
+                {% endfor %}
             </ul>
         </div>
-
         <div class="card">
             <h4>Threats</h4>
             <ul>
-                <li>Intense competition</li>
-                <li>Regulatory uncertainty</li>
+                {% for item in doc.swot.threats %}
+                    <li>{{ item }}</li>
+                {% endfor %}
             </ul>
         </div>
     </div>
 </div>
 
-<!-- PESTLE -->
 <div class="card">
     <h3>PESTLE Analysis</h3>
     <ul>
-        <li><b>Political:</b> Regulatory and compliance pressures</li>
-        <li><b>Economic:</b> Inflation and cost sensitivity</li>
-        <li><b>Social:</b> Changing customer expectations</li>
-        <li><b>Technological:</b> Rapid AI and automation growth</li>
-        <li><b>Legal:</b> Data protection requirements</li>
-        <li><b>Environmental:</b> Sustainability considerations</li>
+        {# Use .get() to avoid crashing if 'pestle' is missing #}
+        {% for category, detail in doc.get('pestle', {}).items() %}
+            <li><b>{{ category }}:</b> {{ detail }}</li>
+        {% else %}
+            <li><i>No PESTLE data available for this document. Upload a new document to generate this analysis.</i></li>
+        {% endfor %}
     </ul>
 </div>
 
-<!-- PORTER FIVE FORCES -->
 <div class="card">
     <h3>Porter’s Five Forces</h3>
     <ul>
-        <li><b>Competitive Rivalry:</b> High</li>
-        <li><b>Supplier Power:</b> Medium</li>
-        <li><b>Buyer Power:</b> High</li>
-        <li><b>Threat of Substitutes:</b> Medium</li>
-        <li><b>Threat of New Entrants:</b> Low</li>
+        {# Use .get() to avoid crashing if 'porters' is missing #}
+        {% for force, level in doc.get('porters', {}).items() %}
+            <li><b>{{ force }}:</b> {{ level }}</li>
+        {% else %}
+            <li><i>No Porter's data available for this document. Upload a new document to generate this analysis.</i></li>
+        {% endfor %}
     </ul>
 </div>
 
-<!-- AI DIAGNOSIS -->
-<div class="card">
-    <h3>AI Strategic Diagnosis</h3>
-    <p>
-        Based on the analysis, the business demonstrates strong growth
-        potential but faces moderate operational and competitive risks.
-        A balanced strategy focusing on market expansion while strengthening
-        internal efficiencies is recommended.
-    </p>
-</div>
-
+{% endif %}
 {% endblock %}

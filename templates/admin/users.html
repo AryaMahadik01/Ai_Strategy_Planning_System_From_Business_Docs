@@ -1,29 +1,57 @@
 {% extends "base.html" %}
-{% block content %}
-<h2>User Behavior Analysis</h2>
 
-<div class="card">
-    <table width="100%">
-        <tr>
-            <th>User</th>
-            <th>Role</th>
-            <th>Documents Uploaded</th>
-            <th>Status</th>
-        </tr>
-        {% for u in users %}
-        <tr>
-            <td>{{ u.email }}</td>
-            <td>{{ u.role }}</td>
-            <td>{{ usage.get(u.email, 0) }}</td>
-            <td>
-                {% if usage.get(u.email, 0) > 0 %}
-                    Active
-                {% else %}
-                    Inactive
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
+{% block content %}
+<style>
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th { text-align: left; padding: 12px; border-bottom: 2px solid #e2e8f0; color: var(--text-muted); font-size: 12px; text-transform: uppercase; }
+    td { padding: 16px 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    .badge-user { background: #e0e7ff; color: #4338ca; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+    .badge-admin { background: #fef3c7; color: #b45309; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+</style>
+
+<h2>User Management</h2>
+<p style="color: var(--text-muted); margin-bottom: 30px;">View and manage registered users.</p>
+
+<div class="card" style="padding: 0;">
+    <table cellspacing="0">
+        <thead>
+            <tr>
+                <th>Name / Email</th>
+                <th>Role</th>
+                <th>Joined Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td>
+                    <div style="font-weight: 600;">{{ u.name }}</div>
+                    <div style="color: var(--text-muted); font-size: 12px;">{{ u.email }}</div>
+                </td>
+                <td>
+                    {% if u.role == 'admin' %}
+                        <span class="badge-admin">ADMIN</span>
+                    {% else %}
+                        <span class="badge-user">USER</span>
+                    {% endif %}
+                </td>
+                <td>{{ u.created_at.strftime('%Y-%m-%d') if u.created_at else 'N/A' }}</td>
+                <td><span style="color: var(--success);">● Active</span></td>
+                <td>
+                    {% if u.email != session['user'] %}
+                    <form action="/admin/delete_user/{{ u._id }}" method="POST" onsubmit="return confirm('Delete this user?');">
+                        <button type="submit" style="background: none; border: none; color: var(--danger); cursor: pointer; font-size: 13px;">
+                            🗑 Remove
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </div>
 {% endblock %}

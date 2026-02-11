@@ -3,34 +3,32 @@
 {% block content %}
 <h2>Scenario Comparison</h2>
 
-<p style="color:#64748b">
-Simulate strategic outcomes by prioritizing different business objectives.
+<p style="color: var(--text-muted); margin-bottom: 30px;">
+    Simulate strategic outcomes by prioritizing different business objectives.
 </p>
 
-<!-- SCENARIO SELECTOR -->
 <div class="card">
-    <h3>Select Scenario</h3>
-    <form method="GET">
-        <select name="scenario">
+    <h3>Select Strategy Simulation</h3>
+    <form method="GET" style="display: flex; gap: 10px;">
+        <select name="scenario" onchange="this.form.submit()" style="margin-bottom: 0;">
             <option value="growth" {% if scenario=='growth' %}selected{% endif %}>
-                Growth-Focused Strategy
+                🚀 Growth-Focused Strategy (Maximize Revenue)
             </option>
             <option value="cost" {% if scenario=='cost' %}selected{% endif %}>
-                Cost Optimization Strategy
+                💰 Cost Optimization Strategy (Maximize Efficiency)
             </option>
             <option value="risk" {% if scenario=='risk' %}selected{% endif %}>
-                Risk Minimization Strategy
+                🛡 Risk Minimization Strategy (Maximize Stability)
             </option>
         </select>
-        <button type="submit">Simulate</button>
+        <button type="submit" style="width: auto;">Simulate</button>
     </form>
 </div>
 
-<!-- RESULTS -->
 <div class="kpi-row">
     <div class="card">
         <h4>Primary Focus</h4>
-        <h2>{{ result.focus }}</h2>
+        <h2 style="color: var(--primary);">{{ result.focus }}</h2>
     </div>
 
     <div class="card">
@@ -40,44 +38,54 @@ Simulate strategic outcomes by prioritizing different business objectives.
 
     <div class="card">
         <h4>Risk Exposure</h4>
-        <h2>{{ result.risk }}%</h2>
-    </div>
-
-    <div class="card">
-        <h4>AI Confidence</h4>
-        <h2>{{ result.confidence }}%</h2>
+        <h2 style="color: {% if result.risk > 60 %}var(--danger){% else %}var(--success){% endif %};">
+            {{ result.risk }}%
+        </h2>
     </div>
 </div>
 
-<!-- KPI IMPACT -->
 <div class="card">
     <h3>Expected KPI Impact</h3>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">
+        Projected metrics based on the selected simulation.
+    </p>
 
-    <p><b>Revenue Growth</b></p>
-    <div class="progress">
-        <div class="progress-bar" style="width:{{ result.revenue }}%">
-            {{ result.revenue }}%
+    <div style="margin-bottom: 15px;">
+        <div style="display: flex; justify-content: space-between; font-weight: 600;">
+            <span>Revenue Growth</span>
+            <span>{{ result.revenue }}%</span>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" style="width:{{ result.revenue }}%"></div>
         </div>
     </div>
 
-    <p style="margin-top:15px"><b>Cost Efficiency</b></p>
-    <div class="progress">
-        <div class="progress-bar" style="width:{{ result.cost_efficiency }}%">
-            {{ result.cost_efficiency }}%
+    <div style="margin-bottom: 15px;">
+        <div style="display: flex; justify-content: space-between; font-weight: 600;">
+            <span>Cost Efficiency</span>
+            <span>{{ result.cost_efficiency }}%</span>
+        </div>
+        <div class="progress">
+            <div class="progress-bar green" style="width:{{ result.cost_efficiency }}%"></div>
         </div>
     </div>
 
-    <p style="margin-top:15px"><b>Operational Stability</b></p>
-    <div class="progress">
-        <div class="progress-bar" style="width:{{ result.stability }}%">
-            {{ result.stability }}%
+    <div>
+        <div style="display: flex; justify-content: space-between; font-weight: 600;">
+            <span>Operational Stability</span>
+            <span>{{ result.stability }}%</span>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" style="width:{{ result.stability }}%; background: #64748b;"></div>
         </div>
     </div>
 </div>
 
-<!-- AI EXPLANATION -->
-<div class="card">
-    <h3>AI Explanation</h3>
-    <p>{{ result.explanation }}</p>
+<div class="card" style="border-left: 4px solid var(--primary);">
+    <h3>AI Analysis</h3>
+    <p style="line-height: 1.8; color: var(--text-main);">
+        {{ result.explanation }}
+    </p>
 </div>
+
 {% endblock %}

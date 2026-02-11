@@ -1,65 +1,118 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Strategy Workspace</h2>
+<style>
+    /* Dashboard specific grid adjustments */
+    .dash-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 24px; }
+    .main-split { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    
+    .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+    .stat-title { color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .stat-value { font-size: 28px; font-weight: 700; color: #0f172a; }
+    .stat-change { font-size: 12px; color: #10b981; font-weight: 500; margin-top: 4px; display: block; }
+</style>
 
-<p style="color:#64748b">
-Your personalized AI-powered strategy planning environment.
-</p>
-
-<!-- STRATEGY STATUS -->
-<div class="kpi-row">
-    <div class="card">
-        <h4>Documents Uploaded</h4>
-        <h2>{{ documents | length }}</h2>
-        <p style="color:#64748b">Business inputs</p>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <div>
+        <h2 style="margin: 0;">Dashboard</h2>
+        <p style="margin: 5px 0 0 0; color: #64748b;">Welcome back, {{ session.get('user').split('@')[0] }}</p>
     </div>
-
-    <div class="card">
-        <h4>Strategy Readiness</h4>
-        <h2>78%</h2>
-        <p style="color:#22c55e">Strong</p>
-    </div>
-
-    <div class="card">
-        <h4>Primary Focus</h4>
-        <h2>Growth</h2>
-        <p style="color:#64748b">Expansion</p>
-    </div>
-
-    <div class="card">
-        <h4>Risk Exposure</h4>
-        <h2>Medium</h2>
-        <p style="color:#f59e0b">Manageable</p>
+    <div>
+        <a href="/user/documents" class="btn">＋ New Analysis</a>
     </div>
 </div>
 
-<!-- DOCUMENT ACTIVITY -->
-<div class="card">
-    <h3>Recent Business Documents</h3>
+<div class="dash-grid">
+    <div class="stat-card">
+        <div class="stat-title">Analyzed Documents</div>
+        <div class="stat-value">{{ stats.total }}</div>
+        <span class="stat-change">Total processed</span>
+    </div>
 
-    <ul>
-        {% for d in documents[:3] %}
-            <li>
-                <b>{{ d.filename }}</b><br>
-                <a href="/user/overview">View Strategy →</a>
-            </li>
+    <div class="stat-card">
+        <div class="stat-title">Primary Strategy</div>
+        <div class="stat-value" style="font-size: 20px; color: #4f46e5;">
+            {{ doc.intents[0] | replace('_', ' ') | title if doc and doc.intents else 'Pending...' }}
+        </div>
+        <span class="stat-change" style="color: #64748b;">Based on latest doc</span>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-title">Current Risk Level</div>
+        <div class="stat-value" style="color: {% if stats.risk > 50 %}#ef4444{% else %}#10b981{% endif %};">
+            {{ stats.risk }}%
+        </div>
+        <span class="stat-change" style="color: #64748b;">AI Risk Detection</span>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-title">Last Activity</div>
+        <div class="stat-value" style="font-size: 20px;">{{ stats.last_active }}</div>
+        <span class="stat-change" style="color: #64748b;">System Update</span>
+    </div>
+</div>
+
+<div class="main-split">
+    
+    <div>
+        {% if doc %}
+            <div class="card" style="border-left: 5px solid #4f46e5;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                    <div>
+                        <h3 style="margin: 0;">Latest Intelligence: {{ doc.filename }}</h3>
+                        <span style="background: #e0e7ff; color: #4338ca; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                            AI PROCESSED
+                        </span>
+                    </div>
+                    <a href="/user/reports" style="color: #4f46e5; font-size: 13px; font-weight: 600;">View Full Report →</a>
+                </div>
+
+                <p style="color: #334155; line-height: 1.6; font-size: 14px; background: #f8fafc; padding: 15px; border-radius: 8px;">
+                    {{ doc.summary }}
+                </p>
+
+                <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <strong style="font-size: 12px; color: #64748b;">SENTIMENT</strong><br>
+                        <div style="font-weight: 600;">{{ doc.sentiment }}</div>
+                    </div>
+                    <div>
+                        <strong style="font-size: 12px; color: #64748b;">KEY ENTITIES</strong><br>
+                        <div style="font-size: 13px; color: #4f46e5;">
+                            {{ doc.entities.organizations[:3] | join(', ') if doc.entities.organizations else 'None detected' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <li>No documents uploaded yet.</li>
-        {% endfor %}
-    </ul>
+            <div class="card" style="text-align: center; padding: 40px; border-style: dashed; border-color: #cbd5e1;">
+                <div style="font-size: 40px; margin-bottom: 10px; opacity: 0.5;">📄</div>
+                <h3 style="margin-bottom: 10px;">No Active Analysis</h3>
+                <p style="color: #64748b; margin-bottom: 20px;">Upload a business document to generate strategy insights.</p>
+                <a href="/user/documents" class="btn">Upload Document</a>
+            </div>
+        {% endif %}
+    </div>
 
-    <a href="/user/documents">📂 Manage Documents</a>
-</div>
+    <div class="card">
+        <h3 style="font-size: 16px; margin-bottom: 20px;">Recent Files</h3>
+        
+        {% if recent %}
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for r in recent %}
+                <li style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 32px; height: 32px; background: #f1f5f9; border-radius: 6px; display: flex; align-items: center; justify-content: center;">📄</div>
+                    <div style="overflow: hidden;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ r.filename }}</div>
+                        <div style="font-size: 11px; color: #94a3b8;">{{ r.created_at.strftime('%b %d') }}</div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p style="font-size: 13px; color: #94a3b8;">No recent activity.</p>
+        {% endif %}
+    </div>
 
-<!-- NEXT ACTIONS -->
-<div class="card">
-    <h3>Recommended Next Actions</h3>
-    <ul>
-        <li>📄 Upload additional business data</li>
-        <li>🧠 Review AI strategic insights</li>
-        <li>🔄 Simulate alternative scenarios</li>
-        <li>📑 Download executive report</li>
-    </ul>
 </div>
 {% endblock %}
