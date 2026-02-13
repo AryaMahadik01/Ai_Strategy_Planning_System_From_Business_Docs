@@ -8,6 +8,14 @@
 </head>
 <body>
 
+<header class="site-header">
+    <a href="/" class="logo-container" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="StrategixAI Logo" class="nav-logo">
+        
+        <span class="logo-text">StrategixAI</span>
+    </a>
+</header>
+
 <section class="hero">
     <h1>Turn Documents into <br> Boardroom Strategy.</h1>
     <p>
@@ -20,7 +28,7 @@
         <a href="/user/dashboard" class="btn">Go to Dashboard →</a>
     {% else %}
         <a href="/register" class="btn">Start Free Analysis</a>
-        <a href="/login" class="btn secondary" style="color:#cbd5e1; border-color:#334155; margin-left:10px;">Login</a>
+        <a href="/login" class="btn secondary" style="color: white; border-color: rgba(255,255,255,0.5); margin-left:10px; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);">Login</a>
     {% endif %}
     </div>
 </section>
@@ -50,11 +58,11 @@
             <p style="color: #64748b;">"What if we focus on Growth?" Simulate strategic pivots and see the impact on KPIs instantly.</p>
         </div>
 
-        <div class="card" style="text-align: left;">
+        <!-- <div class="card" style="text-align: left;">
             <div style="font-size: 32px; margin-bottom: 15px;">💬</div>
             <h3>AI Consultant Chat</h3>
             <p style="color: #64748b;">Don't just read reports. Chat with your documents to get specific answers about budgets and competitors.</p>
-        </div>
+        </div> -->
     </div>
 </section>
 
@@ -72,9 +80,9 @@
                 StrategixAI cut our strategic planning time by 70%. The SWOT extraction is frighteningly accurate and the PDF reports are board-ready immediately.
             </p>
             <div class="user-profile">
-                <div class="avatar-circle" style="background: #4f46e5;">JS</div>
+                <div class="avatar-circle" style="background: #4f46e5;">TS</div>
                 <div class="user-info">
-                    <h4>James Sullivan</h4>
+                    <h4>Tony Stark</h4>
                     <span>Director of Strategy, TechCorp</span>
                 </div>
             </div>
@@ -86,9 +94,9 @@
                 I used to spend days reading competitor annual reports. Now I just upload them here, and I get a full risk profile in seconds. A game changer.
             </p>
             <div class="user-profile">
-                <div class="avatar-circle" style="background: #f59e0b;">AL</div>
+                <div class="avatar-circle" style="background: #f59e0b;">SR</div>
                 <div class="user-info">
-                    <h4>Anita Lopez</h4>
+                    <h4>Steve Rogers</h4>
                     <span>Senior Consultant, MBB Firm</span>
                 </div>
             </div>
@@ -100,9 +108,9 @@
                 The scenario simulation feature is brilliant. Being able to toggle between 'Growth' and 'Risk' modes helps us prepare for any market condition.
             </p>
             <div class="user-profile">
-                <div class="avatar-circle" style="background: #ec4899;">MK</div>
+                <div class="avatar-circle" style="background: #ec4899;">MM</div>
                 <div class="user-info">
-                    <h4>Michael Khan</h4>
+                    <h4>Matt Murdock</h4>
                     <span>COO, Logistics Global</span>
                 </div>
             </div>
@@ -114,9 +122,9 @@
                 Finally, a tool that understands business context. It picked up on subtle regulatory risks in our documents that our junior analysts missed.
             </p>
             <div class="user-profile">
-                <div class="avatar-circle" style="background: #10b981;">SR</div>
+                <div class="avatar-circle" style="background: #10b981;">SS</div>
                 <div class="user-info">
-                    <h4>Sarah Ross</h4>
+                    <h4>Stephen Strange</h4>
                     <span>VP of Operations, FinServe</span>
                 </div>
             </div>
@@ -129,7 +137,9 @@
     <div class="footer-container">
         
         <div class="footer-col">
-            <h3 style="font-size: 20px; font-weight: 800; letter-spacing: -0.5px;">StrategixAI</h3>
+            <h3 style="font-size: 20px; font-weight: 800; letter-spacing: -0.5px;"><div class="logo-container">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="StrategixAI Logo" class="nav-logo">
+    </div>StrategixAI</h3>
             <p>
                 The enterprise standard for AI-driven strategic planning and document intelligence.
             </p>
@@ -137,12 +147,12 @@
         </div>
 
         <div class="footer-col">
-            <h3>Product</h3>
+            <h3>Service Provides</h3>
             <ul class="footer-links">
-                <li><a href="#">Features</a></li>
-                <li><a href="#">Pricing</a></li>
-                <li><a href="#">Enterprise</a></li>
-                <li><a href="#">Security</a></li>
+                <li><a href="#">Performance & KPIs</a></li>
+                <li><a href="#">Strategy Comparison</a></li>
+                <li><a href="#">AI Insights</a></li>
+                <li><a href="#">Scenario Comparison</a></li>
             </ul>
         </div>
 

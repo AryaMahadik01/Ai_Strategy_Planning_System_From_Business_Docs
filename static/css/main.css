@@ -26,6 +26,84 @@
     --radius: 12px;
 }
 
+/* =======================
+   1. HEADER & LOGO (New)
+======================= */
+.site-header {
+    position: absolute; /* Sits on top of the hero image */
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 25px 50px; /* Adjust padding for mobile later if needed */
+    z-index: 10; /* Ensures it sits above the background overlay */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-logo {
+    height: 50px; /* Controls the size of your logo */
+    width: auto;  /* Maintains aspect ratio */
+    display: block;
+}
+.logo-text {
+    color: white;
+    font-size: 30px;
+    font-weight: 800; /* Extra bold */
+    letter-spacing: -0.5px; /* Tighter spacing looks more modern */
+    font-family: 'Malgun Gothic', 'Arial', sans-serif;
+    /* Optional: Add a slight text shadow to pop against the background */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+    .site-header {
+        padding: 20px;
+    }
+    .logo-text {
+        font-size: 20px;
+    }
+}
+/* =======================
+   2. HERO SECTION (Updated with Image)
+======================= */
+.hero {
+    /* We use a linear-gradient OVER the image to darken it so text is readable */
+    background: linear-gradient(
+        rgba(15, 23, 42, 0.85), /* Dark Slate overlay with 85% opacity */
+        rgba(15, 23, 42, 0.95)
+    ), 
+    url('../images/bg2.png'); /* The path relative to the CSS file */
+    
+    background-size: cover;     /* Ensures image covers the whole area */
+    background-position: center center; /* Centers the image */
+    background-repeat: no-repeat;
+    
+    color: white;
+    padding: 180px 20px 120px; /* Increased top padding to make room for logo header */
+    text-align: center;
+    position: relative;
+}
+
+.hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    /* Optional: Adds a subtle text shadow for better pop against image */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero p {
+    font-size: 18px;
+    color: #cbd5e1; /* Lighter slate for subtitle */
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+}
+
 * { box-sizing: border-box; }
 
 body {
@@ -188,7 +266,7 @@ button:hover, .btn:hover {
 
 /* =======================
    5. LANDING PAGE
-======================= */
+=======================
 .hero {
     background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
     color: white;
@@ -205,7 +283,7 @@ button:hover, .btn:hover {
     -webkit-text-fill-color: transparent;
 }
 
-.hero p { font-size: 20px; color: #cbd5e1; max-width: 600px; margin: 0 auto 40px; }
+.hero p { font-size: 20px; color: #cbd5e1; max-width: 600px; margin: 0 auto 40px; } */
 
 .features { padding: 80px 20px; background: white; }
 .feature-grid {
@@ -395,7 +473,7 @@ button:hover, .btn:hover {
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 40px;
+    gap: 20px;
 }
 
 .footer-col h3 { color: white; font-size: 16px; margin-bottom: 20px; }

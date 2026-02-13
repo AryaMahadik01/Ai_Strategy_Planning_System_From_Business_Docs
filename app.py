@@ -114,7 +114,7 @@ def login():
                 session["role"] = user.get("role", "user")
                 
                 if session["role"] == "admin":
-                    return redirct(url_for("admin_dashboard"))
+                    return redirect(url_for("admin_dashboard"))
                 else:
                     return redirect(url_for("user_dashboard"))
             else:
