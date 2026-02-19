@@ -5,9 +5,6 @@
 __pycache__/
 *.py[cod]
 
-# Virtual environments (if you use one)
-venv/
-env/
-
-# OS generated files
-.DS_Store
+# Ignore user uploads and generated reports
+uploads/
+reports/
