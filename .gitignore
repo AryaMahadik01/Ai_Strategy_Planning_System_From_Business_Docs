@@ -1,0 +1,13 @@
+# Security
+.env
+
+# Python caching
+__pycache__/
+*.py[cod]
+
+# Virtual environments (if you use one)
+venv/
+env/
+
+# OS generated files
+.DS_Store

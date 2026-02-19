@@ -267,7 +267,7 @@ def generate_strategy_pdf(doc, output_path):
     # Pestle
     Story.append(Paragraph("3. Environmental Scan (PESTLE)", h2))
     pestle = doc.get("pestle", {})
-    pestle_data = [[k, v] for k, v in pestle.items()] or [["No Data", ""]]
+    pestle_data = [[k, Paragraph(str(v), body)] for k, v in pestle.items()] or [["No Data", ""]]
     t_pestle = Table(pestle_data, colWidths=[100, 340])
     t_pestle.setStyle(TableStyle([
         ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
