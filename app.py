@@ -15,13 +15,13 @@ from datetime import datetime
 from ai_engine.text_extractor import extract_text
 from ai_engine.nlp_processor import (
     clean_text, extract_keywords,
-    generate_summary, detect_business_intent
+    generate_summary
 )
 from ai_engine.strategy_generator import (
-    generate_swot, generate_pestle, generate_porters, # Add these
+    generate_full_strategy_profile, # <--- Our new Gemini function!
     generate_initial_strategy, generate_kpis, 
     generate_action_plan, prioritize_strategies,
-    calculate_strategic_scores,simulate_scenario
+    calculate_strategic_scores, simulate_scenario
 )
 from ai_engine.pdf_generator import generate_strategy_pdf
 from ai_engine.chat_processor import get_document_answer  # <--- ADD THIS
@@ -61,12 +61,15 @@ def register():
 
     if request.method == "POST":
         name = request.form["name"]
-        email = request.form["email"]
-        password = generate_password_hash(request.form["password"])
-        role = request.form["role"]
+        email = request.form["email"].strip()
+        # Hash the password for security
+        password = generate_password_hash(request.form["password"].strip())
+        
+        # ❌ REMOVED: role = request.form["role"] (This was causing the crash!)
 
         if mongo.db.users.find_one({"email": email}):
-            return "User already exists"
+            flash("User already exists with that email.")
+            return redirect(url_for("register"))
 
         # Force role to be 'user' for all new signups
         mongo.db.users.insert_one({
@@ -76,7 +79,8 @@ def register():
             "role": "user",  # <--- HARDCODED SECURITY
             "created_at": datetime.now()
         })
-
+        
+        flash("Registration successful! Please log in.")
         return redirect(url_for("login"))
 
     return render_template("auth/register.html")
@@ -194,28 +198,35 @@ def user_documents():
             # 1. Extract Text
             raw_text = extract_text(filepath)
             
-            # 2. Run New Industry-Grade NLP Analysis (Sentiment, Entities, Smart Summary)
+            # 2. Run Industry-Grade NLP Analysis (Sentiment, Entities, Smart Summary)
             analysis = nlp.analyze_document_text(raw_text)
 
-            # 3. Run Strategic Analysis (Your existing Logic)
-            # Note: We use the raw_text for these generators
-            intents = detect_business_intent(raw_text)
-            swot = generate_swot(raw_text)
-            pestle = generate_pestle(raw_text)
-            porters = generate_porters(raw_text)
+            # 3. Run AI Strategic Analysis using Gemini
+            #from ai_engine.strategy_generator import generate_full_strategy_profile
+            
+            # Get everything from Gemini in one call
+            llm_analysis = generate_full_strategy_profile(raw_text)
+            
+            # Map the results to your existing variables with safe fallbacks
+            intents = llm_analysis.get("intents", ["general_strategy"])
+            swot = llm_analysis.get("swot", {"strengths": [], "weaknesses": [], "opportunities": [], "threats": []})
+            pestle = llm_analysis.get("pestle", {})
+            porters = llm_analysis.get("porters", {})
+
+            # 4. Run Derived Strategic Analysis (Your existing Logic)
             strategies = generate_initial_strategy(intents, swot)
             kpis = generate_kpis(intents)
             action_plan = generate_action_plan(strategies)
             prioritized = prioritize_strategies(strategies, swot)
 
-            # 4. Save Everything to Database
+            # 5. Save Everything to Database
             mongo.db.documents.insert_one({
                 "user": session["user"],
                 "filename": filename,
                 "raw_text": raw_text,       # Critical for Chat
                 "cleaned_text": raw_text,   # (Simplified for now)
                 
-                # --- NEW INTELLIGENCE DATA ---
+                # --- INTELLIGENCE DATA ---
                 "summary": analysis.get("summary"),       # Uses the new smart summarizer
                 "sentiment": analysis.get("sentiment", "Neutral"),
                 "entities": analysis.get("entities", {}), # Orgs, Money, Locations
@@ -235,15 +246,15 @@ def user_documents():
                 "created_at": datetime.now()
             })
 
-            # 5. Audit Log
+            # 6. Audit Log
             mongo.db.logs.insert_one({
                 "user": session["user"],
-                "action": "Uploaded & Analyzed Document",
+                "action": "Uploaded & Analyzed Document with AI",
                 "meta": filename,
                 "timestamp": datetime.now()
             })
 
-            flash("Document uploaded and successfully analyzed!")
+            flash("Document uploaded and successfully analyzed by Gemini AI!")
             return redirect(url_for("user_documents"))
 
     # GET Request: Show list

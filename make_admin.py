@@ -1,24 +1,26 @@
-from flask import Flask
-from flask_pymongo import PyMongo
-from config import Config
+from pymongo import MongoClient
+from werkzeug.security import generate_password_hash
+from datetime import datetime
 
-app = Flask(__name__)
-app.config.from_object(Config)
-mongo = PyMongo(app)
+# Connect to your MongoDB (Make sure this matches your config.py!)
+client = MongoClient("mongodb://localhost:27017/")
+db = client["strategix"] # Replace 'strategix' if your DB name is different
 
-def promote_to_admin(email):
-    with app.app_context():
-        user = mongo.db.users.find_one({"email": email})
-        if user:
-            mongo.db.users.update_one(
-                {"email": email},
-                {"$set": {"role": "admin"}}
-            )
-            print(f"Success! {email} is now an Admin.")
-        else:
-            print(f"Error: User {email} not found.")
+admin_email = "admin@strategix.com"
+admin_password = "admin123" # Change this to whatever you want!
 
-if __name__ == "__main__":
-    # REPLACE THIS WITH YOUR EMAIL
-    target_email = "arya01@gmail.com" 
-    promote_to_admin(target_email)
+# Check if admin already exists
+if db.users.find_one({"email": admin_email}):
+    print(f"Admin {admin_email} already exists! Try logging in.")
+else:
+    # Insert Admin
+    db.users.insert_one({
+        "name": "System Admin",
+        "email": admin_email,
+        "password": generate_password_hash(admin_password), # Securely hashed
+        "role": "admin",
+        "created_at": datetime.now()
+    })
+    print(f"✅ Admin created successfully!")
+    print(f"Email: {admin_email}")
+    print(f"Password: {admin_password}")

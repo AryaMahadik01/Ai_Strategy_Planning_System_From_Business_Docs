@@ -1,75 +1,68 @@
-def generate_swot(raw_text):
+import json
+from google import genai
+from config import Config
+
+# Use the new Client setup
+client = genai.Client(api_key=Config.GEMINI_API_KEY)
+
+def generate_full_strategy_profile(raw_text):
     """
-    Generate basic SWOT analysis from text
+    Uses Gemini to analyze the document and return structured JSON for all frameworks.
     """
-    text = raw_text.lower()
+    text_snippet = raw_text[:30000] 
+
+    prompt = f"""
+    You are an expert McKinsey-level corporate strategy consultant. 
+    Analyze the following business document and extract key strategic frameworks.
     
-    # Expanded keywords for better detection
-    swot_map = {
-        "strengths": ["strong", "experienced", "brand", "leader", "advanced", "expert", "quality", "efficient"],
-        "weaknesses": ["weak", "delay", "cost", "lack", "inefficient", "poor", "issue", "problem"],
-        "opportunities": ["opportunity", "growth", "expand", "market", "demand", "trend", "potential"],
-        "threats": ["risk", "competition", "regulation", "loss", "uncertain", "compliance", "pressure"]
-    }
+    Return ONLY a raw, valid JSON object with the exact following structure. Do not include markdown formatting like ```json.
+    {{
+        "intents": ["Top 2 business intents (e.g., market_expansion, cost_reduction, digital_transformation, risk_management)"],
+        "swot": {{
+            "strengths": ["3 key strengths"],
+            "weaknesses": ["3 key weaknesses"],
+            "opportunities": ["3 key opportunities"],
+            "threats": ["3 key threats"]
+        }},
+        "pestle": {{
+            "Political": "1 sentence analysis",
+            "Economic": "1 sentence analysis",
+            "Social": "1 sentence analysis",
+            "Technological": "1 sentence analysis",
+            "Legal": "1 sentence analysis",
+            "Environmental": "1 sentence analysis"
+        }},
+        "porters": {{
+            "Competitive Rivalry": "High/Medium/Low - short reason",
+            "Supplier Power": "High/Medium/Low - short reason",
+            "Buyer Power": "High/Medium/Low - short reason",
+            "Threat of Substitutes": "High/Medium/Low - short reason",
+            "Threat of New Entrants": "High/Medium/Low - short reason"
+        }}
+    }}
 
-    results = {k: [] for k in swot_map}
-
-    # Context-aware extraction (simple window)
-    sentences = text.split('.')
-    for sentence in sentences:
-        for category, keywords in swot_map.items():
-            if any(k in sentence for k in keywords) and len(results[category]) < 4:
-                # Clean up the sentence slightly
-                clean_sent = sentence.strip().capitalize()
-                if 10 < len(clean_sent) < 150: # Avoid noise
-                    results[category].append(clean_sent)
-
-    # Fallbacks if nothing found
-    if not results["strengths"]: results["strengths"] = ["Operational stability detected"]
-    if not results["weaknesses"]: results["weaknesses"] = ["No major internal inefficiencies detected"]
-    if not results["opportunities"]: results["opportunities"] = ["Market expansion potential"]
-    if not results["threats"]: results["threats"] = ["Standard market competition"]
-
-    return results
-
-def generate_pestle(raw_text):
+    Document Text:
+    {text_snippet}
     """
-    Generate PESTLE Analysis
-    """
-    text = raw_text.lower()
-    pestle = {
-        "Political": ["government", "regulation", "policy", "tax", "trade"],
-        "Economic": ["inflation", "interest", "economy", "budget", "cost"],
-        "Social": ["culture", "demographic", "customer", "lifestyle", "trend"],
-        "Technological": ["ai", "automation", "digital", "tech", "software"],
-        "Legal": ["law", "compliance", "act", "rights", "intellectual"],
-        "Environmental": ["green", "sustainability", "carbon", "waste", "climate"]
-    }
-    
-    analysis = {}
-    for category, keywords in pestle.items():
-        found = False
-        for k in keywords:
-            if k in text:
-                analysis[category] = f"Factors related to {k} detected."
-                found = True
-                break
-        if not found:
-            analysis[category] = "No significant factors detected."
-            
-    return analysis
 
-def generate_porters(raw_text):
-    """
-    Generate Porter's Five Forces
-    """
-    return {
-        "Competitive Rivalry": "High" if "competit" in raw_text.lower() else "Medium",
-        "Supplier Power": "Medium",
-        "Buyer Power": "High" if "customer" in raw_text.lower() else "Medium",
-        "Threat of Substitutes": "Low",
-        "Threat of New Entrants": "Medium"
-    }
+    try:
+        # New API call syntax using gemini-2.5-flash
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt
+        )
+        clean_json = response.text.replace('```json', '').replace('```', '').strip()
+        data = json.loads(clean_json)
+        return data
+    except Exception as e:
+        print(f"Gemini API Error: {e}")
+        return {
+            "intents": ["General Strategy"],
+            "swot": {"strengths": ["Stable operations"], "weaknesses": ["Needs optimization"], "opportunities": ["Market growth"], "threats": ["Competition"]},
+            "pestle": {}, "porters": {}
+        }
+
+
 
 # Keep your existing functions for strategy, kpis, etc. below...
 def generate_initial_strategy(intents, swot):
