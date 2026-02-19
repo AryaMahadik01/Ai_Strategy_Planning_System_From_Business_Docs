@@ -184,3 +184,70 @@ def simulate_scenario(base_scores, scenario_type):
     simulated["confidence"] = 85 # AI Confidence remains high for simulations
 
     return simulated
+
+def generate_performance_metrics(raw_text):
+    """
+    Real-time API call to generate custom chart data for performance.html
+    """
+    prompt = f"""
+    Analyze this business document and generate highly realistic performance metrics and KPI data specifically tailored to this company's current situation.
+    
+    Return ONLY a raw, valid JSON object without any markdown formatting. Use this exact structure:
+    {{
+        "scores": {{"readiness": int(0-100), "maturity": int(0-100), "digital": int(0-100), "risk": int(0-100)}},
+        "kpi_labels": ["Custom KPI 1", "Custom KPI 2", "Custom KPI 3", "Custom KPI 4"],
+        "kpi_values": [int, int, int, int],
+        "growth_trend": [int, int, int, int],
+        "risk_trend": [int, int, int, int]
+    }}
+
+    Document:
+    {raw_text[:20000]}
+    """
+    try:
+        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+        clean_json = response.text.replace('```json', '').replace('```', '').strip()
+        return json.loads(clean_json)
+    except Exception as e:
+        print(f"Performance API Error: {e}")
+        # Safe fallback if API fails
+        return {
+            "scores": {"readiness": 50, "maturity": 50, "digital": 50, "risk": 50},
+            "kpi_labels": ["Revenue", "Efficiency", "Market Share", "Stability"],
+            "kpi_values": [50, 50, 50, 50],
+            "growth_trend": [50, 52, 54, 56], "risk_trend": [50, 48, 46, 44]
+        }
+
+def simulate_scenario_llm(raw_text, scenario_type):
+    """
+    Real-time API call to simulate what happens if a specific strategy is applied.
+    """
+    prompt = f"""
+    You are a strategy consultant. The user wants to apply a '{scenario_type}' strategy to the company described in the document below.
+    Predict the outcomes of applying this specific strategy to this specific company.
+    
+    Return ONLY a raw, valid JSON object without markdown. Use this exact structure:
+    {{
+        "focus": "A 3-4 word title for this specific strategy",
+        "readiness": int(0-100),
+        "risk": int(0-100),
+        "revenue": int(0-100),
+        "cost_efficiency": int(0-100),
+        "stability": int(0-100),
+        "explanation": "Write 2 highly specific sentences explaining exactly what will happen to THIS company if they focus on {scenario_type}, referencing details from the text."
+    }}
+
+    Document:
+    {raw_text[:20000]}
+    """
+    try:
+        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+        clean_json = response.text.replace('```json', '').replace('```', '').strip()
+        return json.loads(clean_json)
+    except Exception as e:
+        print(f"Scenario API Error: {e}")
+        return {
+            "focus": f"{scenario_type.title()} Strategy",
+            "readiness": 50, "risk": 50, "revenue": 50, "cost_efficiency": 50, "stability": 50,
+            "explanation": "Simulation unavailable at this time."
+        }

@@ -100,12 +100,14 @@
         {% if recent %}
             <ul style="list-style: none; padding: 0; margin: 0;">
                 {% for r in recent %}
-                <li style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 32px; height: 32px; background: #f1f5f9; border-radius: 6px; display: flex; align-items: center; justify-content: center;">📄</div>
-                    <div style="overflow: hidden;">
-                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ r.filename }}</div>
-                        <div style="font-size: 11px; color: #94a3b8;">{{ r.created_at.strftime('%b %d') }}</div>
-                    </div>
+                <li style="padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                    <a href="/user/switch_doc/{{ r._id }}" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+                        <div style="width: 32px; height: 32px; background: {% if r._id | string == active_doc_id %}#e0e7ff{% else %}#f1f5f9{% endif %}; border-radius: 6px; display: flex; align-items: center; justify-content: center;">📄</div>
+                        <div style="overflow: hidden;">
+                            <div style="font-size: 13px; font-weight: 600; color: {% if r._id | string == active_doc_id %}#4f46e5{% else %}#334155{% endif %}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ r.filename }}</div>
+                            <div style="font-size: 11px; color: #94a3b8;">{{ r.created_at.strftime('%b %d') }}</div>
+                        </div>
+                    </a>
                 </li>
                 {% endfor %}
             </ul>
