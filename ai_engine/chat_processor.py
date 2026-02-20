@@ -25,10 +25,14 @@ def get_document_answer(question, raw_text):
     try:
         # New API call syntax
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-2.5-flash-lite',
             contents=prompt
         )
         return response.text.strip()
     except Exception as e:
+        error_msg = str(e)
+        if "429" in error_msg:
+            return "⚠️ Whoa there! We're hitting the AI speed limit (max 15 requests per minute). Please wait about 10 seconds and ask your question again."
+        
         print(f"Chat API Error: {e}")
         return "I'm sorry, I encountered an error while processing the document. Please check the terminal logs."

@@ -48,7 +48,7 @@ def generate_full_strategy_profile(raw_text):
     try:
         # New API call syntax using gemini-2.5-flash
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-2.5-flash-lite',
             contents=prompt
         )
         clean_json = response.text.replace('```json', '').replace('```', '').strip()
@@ -205,7 +205,7 @@ def generate_performance_metrics(raw_text):
     {raw_text[:20000]}
     """
     try:
-        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+        response = client.models.generate_content(model='gemini-2.5-flash-lite', contents=prompt)
         clean_json = response.text.replace('```json', '').replace('```', '').strip()
         return json.loads(clean_json)
     except Exception as e:
@@ -241,7 +241,7 @@ def simulate_scenario_llm(raw_text, scenario_type):
     {raw_text[:20000]}
     """
     try:
-        response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+        response = client.models.generate_content(model='gemini-2.5-flash-lite', contents=prompt)
         clean_json = response.text.replace('```json', '').replace('```', '').strip()
         return json.loads(clean_json)
     except Exception as e:

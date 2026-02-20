@@ -22,3 +22,8 @@ for r in resources:
         print(f"Error downloading {r}: {e}")
 
 print("\n✅ Success! All AI models are downloaded.")
+
+
+
+#   Who are our main competitors?
+#   How much funding did we get?

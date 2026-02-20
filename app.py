@@ -379,6 +379,19 @@ def user_performance():
     if not doc or "raw_text" not in doc:
         flash("Please upload a document to view performance metrics.")
         return redirect(url_for("user_documents"))
+    
+    if "performance_metrics" in doc:
+        metrics = doc["performance_metrics"]
+    else:
+        # Generate them and save them to the DB so we never ask the AI again for this doc
+        from ai_engine.strategy_generator import generate_performance_metrics
+        metrics = generate_performance_metrics(doc["raw_text"])
+        
+        # Save to MongoDB
+        mongo.db.documents.update_one(
+            {"_id": doc["_id"]}, 
+            {"$set": {"performance_metrics": metrics}}
+        )
 
     # REAL-TIME AI GENERATION
     from ai_engine.strategy_generator import generate_performance_metrics
@@ -437,6 +450,20 @@ def user_scenarios():
         return redirect(url_for("user_documents"))
 
     scenario_type = request.args.get("scenario", "growth")
+    # Create a unique database key for this specific scenario (e.g., "scenario_growth")
+    scenario_key = f"scenario_{scenario_type}"
+
+    if scenario_key in doc:
+        result = doc[scenario_key]
+    else:
+        from ai_engine.strategy_generator import simulate_scenario_llm
+        result = simulate_scenario_llm(doc["raw_text"], scenario_type)
+        
+        # Save to MongoDB
+        mongo.db.documents.update_one(
+            {"_id": doc["_id"]}, 
+            {"$set": {scenario_key: result}}
+        )
 
     # REAL-TIME AI SIMULATION
     from ai_engine.strategy_generator import simulate_scenario_llm
