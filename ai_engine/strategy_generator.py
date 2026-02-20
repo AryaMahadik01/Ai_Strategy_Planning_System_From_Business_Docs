@@ -251,3 +251,42 @@ def simulate_scenario_llm(raw_text, scenario_type):
             "readiness": 50, "risk": 50, "revenue": 50, "cost_efficiency": 50, "stability": 50,
             "explanation": "Simulation unavailable at this time."
         }
+
+def generate_execution_roadmap(raw_text):
+    """
+    Generates a step-by-step execution timeline (What, Why, How) based on the document.
+    """
+    prompt = f"""
+    You are an elite Chief Strategy Officer. Analyze this business document and create a highly actionable, step-by-step execution roadmap.
+    Break the strategy down into chronological phases. For each phase, provide specific steps detailing What to do, Why it matters, and How to measure success.
+
+    Return ONLY a raw, valid JSON object without markdown formatting. Use this exact array structure:
+    [
+        {{
+            "phase": "Phase 1: Immediate Action (0-30 Days)",
+            "focus": "Core focus of this phase in 3-5 words",
+            "steps": [
+                {{"what": "Specific action to take", "why": "Strategic justification", "how": "KPI or success metric"}}
+            ]
+        }},
+        {{
+            "phase": "Phase 2: Short-Term Execution (Months 1-3)",
+            "focus": "...",
+            "steps": [...]
+        }}
+    ]
+    Include 3 to 4 phases total.
+
+    Document:
+    {raw_text[:20000]}
+    """
+    try:
+        response = client.models.generate_content(model='gemini-2.5-flash-lite', contents=prompt)
+        clean_json = response.text.replace('```json', '').replace('```', '').strip()
+        return json.loads(clean_json)
+    except Exception as e:
+        print(f"Roadmap API Error: {e}")
+        # Safe fallback
+        return [
+            {"phase": "Phase 1: Setup", "focus": "System Audit", "steps": [{"what": "Review data", "why": "Establish baseline", "how": "Audit report completion"}]}
+        ]

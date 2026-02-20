@@ -278,32 +278,60 @@ def generate_strategy_pdf(doc, output_path):
     Story.append(PageBreak())
 
     # --- PAGE 4: ROADMAP & RISK ---
-    Story.append(Paragraph("4. Strategic Roadmap", h2))
-    Story.extend(expand_text("roadmap", []))
+    Story.append(Paragraph("4. Step-by-Step Execution Roadmap", h2))
+    Story.append(Paragraph("Based on the diagnostic findings, the following strategic roadmap outlines high-priority execution phases and actionable steps.", body))
+    Story.append(Spacer(1, 15))
     
-    strategies = doc.get("prioritized_strategies", []) or [{"strategy": "Review objectives", "priority": "Medium"}]
-    strat_data = [["Priority", "Initiative", "Timeline"]]
-    for s in strategies[:6]:
-        strat_data.append([s.get('priority', 'Medium'), Paragraph(s.get('strategy', ''), body), "3-6 Months"])
+    # Fetch the dynamic roadmap data we cached in MongoDB
+    roadmap_data = doc.get("execution_roadmap", [])
+    
+    if not roadmap_data:
+        Story.append(Paragraph("<i>No detailed roadmap generated yet. Visit the Roadmap tab in the app to generate it!</i>", body))
+        Story.append(Spacer(1, 20))
+    else:
+        for phase in roadmap_data:
+            # Add Phase Title & Focus
+            phase_title = f"<b>{phase.get('phase', 'Phase')}</b>"
+            Story.append(Paragraph(phase_title, ParagraphStyle('PhaseTitle', parent=body, textColor=colors.HexColor('#4f46e5'), fontName='Helvetica-Bold', fontSize=12)))
+            Story.append(Paragraph(f"Focus: <i>{phase.get('focus', '')}</i>", body))
+            Story.append(Spacer(1, 10))
+            
+            # Create a wrapped table for the steps
+            steps_data = [["Action (What)", "Strategic Justification (Why)", "Metric (How)"]]
+            for step in phase.get("steps", []):
+                steps_data.append([
+                    Paragraph(step.get("what", "N/A"), body),
+                    Paragraph(step.get("why", "N/A"), body),
+                    Paragraph(step.get("how", "N/A"), body)
+                ])
+                
+            t_steps = Table(steps_data, colWidths=[140, 160, 140])
+            t_steps.setStyle(TableStyle([
+                ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1e293b')),
+                ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                ('ALIGN', (0,0), (-1,0), 'CENTER'),
+                ('VALIGN', (0,0), (-1,-1), 'TOP'),
+                ('GRID', (0,0), (-1,-1), 1, colors.HexColor('#e2e8f0')),
+                ('PADDING', (0,0), (-1,-1), 10),
+                ('BACKGROUND', (0,1), (-1,-1), colors.HexColor('#f8fafc')), # Light background for rows
+            ]))
+            Story.append(t_steps)
+            Story.append(Spacer(1, 20))
 
-    t_strat = Table(strat_data, colWidths=[80, 280, 80])
-    t_strat.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1e293b')),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('ALIGN', (0,0), (-1,0), 'CENTER'),
-        ('GRID', (0,0), (-1,-1), 1, colors.HexColor('#e2e8f0')),
-        ('PADDING', (0,0), (-1,-1), 8),
-    ]))
-    Story.append(t_strat)
-    
+    # --- PAGE 5: CRITICAL RISK MANAGEMENT (RESTORED) ---
     Story.append(Spacer(1, 30))
     Story.append(Paragraph("5. Critical Risk Management", h2))
     
+    # Fetch swot data
+    swot = doc.get("swot", {})
     risk_data = [["Risk Factor", "Impact Analysis"]]
+    
     for threat in swot.get('threats', [])[:4]:
         risk_data.append([Paragraph(threat, body), "High Impact"])
-    if len(risk_data) == 1: risk_data.append(["No critical risks detected.", "Low"])
+        
+    if len(risk_data) == 1: 
+        risk_data.append(["No critical risks detected.", "Low"])
 
     t_risk = Table(risk_data, colWidths=[300, 140])
     t_risk.setStyle(TableStyle([

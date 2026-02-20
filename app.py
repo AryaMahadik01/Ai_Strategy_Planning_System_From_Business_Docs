@@ -433,7 +433,7 @@ def user_chat():
 
         # Run the AI Search using our new Gemini integration
         from ai_engine.chat_processor import get_document_answer
-        answer = get_document_answer(question, text_to_analyze)
+        answer = get_document_answer(question, text_to_analyze)                             
         
         return {"answer": answer}
 
@@ -550,6 +550,41 @@ def user_reports():
 
     documents = list(mongo.db.documents.find({"user": session["user"]}))
     return render_template("user/reports.html", documents=documents)
+
+# ---------------- USER ACTION ROADMAP ----------------
+@app.route("/user/roadmap")
+def user_roadmap():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    doc = get_active_document()
+
+    if not doc or "raw_text" not in doc:
+        flash("Please upload a document to view the execution roadmap.")
+        return redirect(url_for("user_documents"))
+
+    # 🚀 CACHING LOGIC
+    if "execution_roadmap" in doc:
+        roadmap = doc["execution_roadmap"]
+    else:
+        # Generate the roadmap using AI
+        from ai_engine.strategy_generator import generate_execution_roadmap
+        roadmap = generate_execution_roadmap(doc["raw_text"])
+        
+        # Save to MongoDB
+        mongo.db.documents.update_one(
+            {"_id": doc["_id"]}, 
+            {"$set": {"execution_roadmap": roadmap}}
+        )
+        
+        # Audit Log
+        mongo.db.logs.insert_one({
+            "user": session["user"],
+            "action": "Generated Step-by-Step AI Roadmap",
+            "meta": doc['filename']
+        })
+
+    return render_template("user/roadmap.html", roadmap=roadmap, doc=doc)
 
 
 # ---------------- PROFILE SETTINGS ----------------
