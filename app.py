@@ -8,6 +8,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from bson import ObjectId
 from bson.objectid import ObjectId
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from itsdangerous import URLSafeTimedSerializer
+
 
 from config import Config
 from datetime import datetime
@@ -32,6 +37,7 @@ import ai_engine.nlp_processor as nlp
 # ---------------- APP SETUP ----------------
 app = Flask(__name__)
 app.config.from_object(Config)
+serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 mongo = PyMongo(app)
 
@@ -96,6 +102,83 @@ def landing():
 
 
 # ---------------- AUTH ----------------
+
+# --- HELPER: SEND RESET EMAIL ---
+def send_reset_email(user_email, token):
+    sender_email = os.getenv("MAIL_USERNAME")
+    sender_password = os.getenv("MAIL_PASSWORD") 
+    
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = user_email
+    msg['Subject'] = "StrategixAI - Password Reset Request"
+    
+    # Generate the absolute URL for the reset link
+    reset_link = url_for('reset_password', token=token, _external=True)
+    body = f"Hello,\n\nTo reset your StrategixAI password, click the secure link below:\n\n{reset_link}\n\nThis link will expire in 1 hour.\nIf you did not make this request, simply ignore this email."
+    
+    msg.attach(MIMEText(body, 'plain'))
+    
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_email, sender_password)
+        text = msg.as_string()
+        server.sendmail(sender_email, user_email, text)
+        server.quit()
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+
+# --- ROUTE 1: FORGOT PASSWORD PAGE ---
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        
+        # 1. Check if user exists (Assuming your users collection has an 'email' field)
+        user = mongo.db.users.find_one({"email": email}) 
+        
+        if user:
+            # 2. Generate a secure token
+            token = serializer.dumps(email, salt='email-reset')
+            # 3. Send the email
+            send_reset_email(email, token)
+            
+        # We always show the same message so hackers can't use this form to guess which emails are registered
+        flash('If an account with that email exists, a password reset link has been sent.', 'info')
+        return redirect(url_for('login'))
+        
+    return render_template('auth/forgot_password.html')
+
+# --- ROUTE 2: VERIFY TOKEN & RESET PASSWORD ---
+# --- ROUTE 2: VERIFY TOKEN & RESET PASSWORD ---
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        # Check if the token is valid and less than 1 hour old (3600 seconds)
+        email = serializer.loads(token, salt='email-reset', max_age=3600) 
+    except Exception:
+        flash('The password reset link is invalid or has expired.', 'danger')
+        return redirect(url_for('forgot_password'))
+
+    if request.method == 'POST':
+        new_password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        
+        # 🚀 NEW LOGIC: Check if passwords match!
+        if new_password != confirm_password:
+            flash('Passwords do not match. Please try again.', 'danger')
+            return redirect(url_for('reset_password', token=token))
+        
+        # Hash the new password and save it
+        hashed_password = generate_password_hash(new_password)
+        mongo.db.users.update_one({"email": email}, {"$set": {"password": hashed_password}})
+        
+        flash('Your password has been successfully updated! You can now log in.', 'success')
+        return redirect(url_for('login'))
+        
+    return render_template('auth/reset_password.html', token=token)
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     # ✅ already logged in → redirect
