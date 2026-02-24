@@ -829,6 +829,31 @@ def download_pdf(doc_id):
 
     return send_file(pdf_path, as_attachment=True)
 
+# ---------------- USER EXPORT PPTX (ADDITIVE FEATURE) ----------------
+@app.route("/user/export/pptx")
+def export_pptx():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    doc = get_active_document()
+    if not doc:
+        flash("No active document found.")
+        return redirect(url_for("user_reports"))
+
+    # Ensure uploads folder exists
+    export_dir = os.path.join(app.root_path, "uploads")
+    os.makedirs(export_dir, exist_ok=True)
+    
+    # Create the file path
+    pptx_filename = f"StrategixAI_Presentation_{doc['_id']}.pptx"
+    pptx_path = os.path.join(export_dir, pptx_filename)
+
+    # Generate the PPTX using our new file
+    from ai_engine.pptx_generator import generate_strategy_pptx
+    generate_strategy_pptx(doc, pptx_path)
+
+    # Send the file to the user safely
+    return send_file(pptx_path, as_attachment=True)
 
 
 # ---------------- RUN ----------------
