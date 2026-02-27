@@ -289,7 +289,7 @@ def user_dashboard():
     recent_docs = list(mongo.db.documents.find(
         {"user": session["user"]},
         {"filename": 1, "created_at": 1, "sentiment": 1}
-    ).sort("created_at", -1).limit(3))
+    ).sort("created_at", -1))
 
     return render_template(
         "user/dashboard.html", 
