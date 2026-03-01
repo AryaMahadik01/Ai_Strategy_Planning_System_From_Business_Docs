@@ -12,7 +12,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from itsdangerous import URLSafeTimedSerializer
-
+import json
 
 from config import Config
 from datetime import datetime
@@ -27,7 +27,8 @@ from ai_engine.strategy_generator import (
     generate_full_strategy_profile, # <--- Our new Gemini function!
     generate_initial_strategy, generate_kpis, 
     generate_action_plan, prioritize_strategies,
-    calculate_strategic_scores, simulate_scenario
+    calculate_strategic_scores, simulate_scenario,
+    generate_comparison_points
 )
 from ai_engine.pdf_generator import generate_strategy_pdf
 from ai_engine.chat_processor import get_document_answer  # <--- ADD THIS
@@ -576,27 +577,34 @@ def compare_strategies():
         doc1 = mongo.db.documents.find_one({"_id": ObjectId(request.form["doc1"])})
         doc2 = mongo.db.documents.find_one({"_id": ObjectId(request.form["doc2"])})
 
-        # 1. Calculate Standardized Scores for both
         stats1 = calculate_strategic_scores(doc1.get("swot", {}), doc1.get("intents", []))
         stats2 = calculate_strategic_scores(doc2.get("swot", {}), doc2.get("intents", []))
 
-        # 2. Determine the "Winner" based on a weighted formula
-        # Formula: Readiness (60%) - Risk (40%)
         score1 = (stats1["readiness"] * 0.6) - (stats1["risk"] * 0.4)
         score2 = (stats2["readiness"] * 0.6) - (stats2["risk"] * 0.4)
 
         winner_name = doc1["filename"] if score1 > score2 else doc2["filename"]
         
-        # 3. Generate a dynamic explanation
         if score1 > score2:
             reason = f"{doc1['filename']} has a stronger strategic position due to higher readiness ({stats1['readiness']}%) and lower risk exposure."
         else:
             reason = f"{doc2['filename']} offers a more balanced approach, effectively mitigating risks ({stats2['risk_label']}) while maintaining operational stability."
 
+        # --- NEW: Call the function from strategy_generator.py! ---
+        api_points = generate_comparison_points(
+            doc1['filename'], doc1.get('swot', {}), 
+            doc2['filename'], doc2.get('swot', {})
+        )
+        
+        doc1_points = api_points.get("doc1_points", ["Strong market positioning.", "Review initial capital risks.", "Solid competitive advantage."])
+        doc2_points = api_points.get("doc2_points", ["Balanced operational approach.", "Mitigated supply chain risks.", "Steady growth trajectory."])
+        # -----------------------------------------------------------
+
         comparison = {
             "doc1": {
                 "name": doc1["filename"],
                 "focus": stats1["focus"],
+                "key_points": doc1_points, 
                 "readiness": stats1["readiness"],
                 "risk": stats1["risk"],
                 "risk_label": stats1["risk_label"]
@@ -604,6 +612,7 @@ def compare_strategies():
             "doc2": {
                 "name": doc2["filename"],
                 "focus": stats2["focus"],
+                "key_points": doc2_points, 
                 "readiness": stats2["readiness"],
                 "risk": stats2["risk"],
                 "risk_label": stats2["risk_label"]
@@ -611,13 +620,6 @@ def compare_strategies():
             "winner": winner_name,
             "explanation": reason
         }
-
-        # Log the action
-        mongo.db.logs.insert_one({
-            "user": session["user"],
-            "action": "Compared two strategies",
-            "meta": f"{doc1['filename']} vs {doc2['filename']}"
-        })
 
     return render_template(
         "user/compare.html",

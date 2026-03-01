@@ -38,6 +38,15 @@ Compare two business documents to evaluate strategic strength and effectiveness.
         <h4>{{ comparison.doc1.name }}</h4>
         <p style="color:#64748b">{{ comparison.doc1.focus }}</p>
         
+        <div style="margin-top: 15px; margin-bottom: 15px;">
+            <b>Key Strategic Points:</b>
+            <ul style="padding-left: 20px; margin-top: 5px; color: #475569;">
+                {% for point in comparison.doc1.key_points %}
+                    <li style="margin-bottom: 4px;">{{ point }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
         <p style="margin-top:10px"><b>Readiness:</b> {{ comparison.doc1.readiness }}%</p>
         <div class="progress"><div class="progress-bar" style="width:{{ comparison.doc1.readiness }}%"></div></div>
 
@@ -52,6 +61,15 @@ Compare two business documents to evaluate strategic strength and effectiveness.
     <div class="card" style="border-top: 4px solid #22c55e;">
         <h4>{{ comparison.doc2.name }}</h4>
         <p style="color:#64748b">{{ comparison.doc2.focus }}</p>
+        
+        <div style="margin-top: 15px; margin-bottom: 15px;">
+            <b>Key Strategic Points:</b>
+            <ul style="padding-left: 20px; margin-top: 5px; color: #475569;">
+                {% for point in comparison.doc2.key_points %}
+                    <li style="margin-bottom: 4px;">{{ point }}</li>
+                {% endfor %}
+            </ul>
+        </div>
         
         <p style="margin-top:10px"><b>Readiness:</b> {{ comparison.doc2.readiness }}%</p>
         <div class="progress"><div class="progress-bar" style="width:{{ comparison.doc2.readiness }}%"></div></div>
