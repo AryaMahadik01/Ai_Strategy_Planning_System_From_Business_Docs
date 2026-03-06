@@ -23,7 +23,6 @@ def get_document_answer(question, raw_text):
     """
 
     try:
-        # New API call syntax
         response = client.models.generate_content(
             model='gemini-2.5-flash-lite',
             contents=prompt

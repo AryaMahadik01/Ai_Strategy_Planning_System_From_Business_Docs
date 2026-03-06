@@ -108,4 +108,4 @@ def extract_text(filepath):
 if __name__ == "__main__":
     test_path = "sample_data/strategy.pdf" # Replace with a real file to test
     if os.path.exists(test_path):
-        print(extract_text(test_path)[:500]) # Print first 500 charsexit
+        print(extract_text(test_path)[:500]) # Print first 500 chars exit

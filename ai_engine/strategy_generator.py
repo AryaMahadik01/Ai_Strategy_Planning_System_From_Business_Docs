@@ -47,7 +47,7 @@ def generate_full_strategy_profile(raw_text):
     """
 
     try:
-        # New API call syntax using gemini-2.5-flash
+        # API call syntax using gemini-2.5-flash-lite
         response = client.models.generate_content(
             model='gemini-2.5-flash-lite',
             contents=prompt
@@ -64,8 +64,6 @@ def generate_full_strategy_profile(raw_text):
         }
 
 
-
-# Keep your existing functions for strategy, kpis, etc. below...
 def generate_initial_strategy(intents, swot):
     strategies = []
     if "growth" in intents: strategies.append("Focus on scalable growth initiatives")
@@ -95,12 +93,9 @@ def calculate_strategic_scores(swot_data, intents=None):
     if not swot_data or not isinstance(swot_data, dict):
         return {"readiness": 50, "risk": 50, "focus": "General Strategy", "risk_label": "Moderate"}
     
-    # NEW LOGIC: Calculate 'weight' based on the length of the text, not just the number of items!
-    # This guarantees unique scores because different companies will have different length descriptions.
     def get_weight(key):
         val = swot_data.get(key, [])
         if isinstance(val, list): 
-            # Sum the number of characters of all strings in this list
             return sum(len(str(item)) for item in val)
         if isinstance(val, str): 
             return len(val)
@@ -116,7 +111,6 @@ def calculate_strategic_scores(swot_data, intents=None):
     if total_weight == 0:
         return {"readiness": 50, "risk": 50, "focus": "General Strategy", "risk_label": "Moderate"}
 
-    # Dynamic Math Logic based on textual weight
     base_readiness = 35
     readiness_bonus = ((s_weight + o_weight) / total_weight) * 60
     readiness = int(base_readiness + readiness_bonus)
@@ -127,7 +121,6 @@ def calculate_strategic_scores(swot_data, intents=None):
     risk = int(base_risk + risk_penalty)
     risk = max(10, min(90, risk)) 
 
-    # Dynamic Focus based on which categories had the most detailed text
     focus = "Balanced Growth"
     if s_weight > w_weight and o_weight >= t_weight:
         focus = "Aggressive Market Expansion"
@@ -136,7 +129,7 @@ def calculate_strategic_scores(swot_data, intents=None):
     elif t_weight > o_weight:
         focus = "Defensive Strategy & Risk Mitigation"
 
-    # Dynamic Risk Label
+
     if risk < 35:
         risk_label = "Low"
     elif risk < 65:
@@ -156,13 +149,12 @@ def simulate_scenario(base_scores, scenario_type):
     Simulate how metrics change based on a strategic focus.
     base_scores: dict containing 'readiness' and 'risk' from the real document.
     """
-    # Start with the document's ACTUAL scores
     simulated = {
         "readiness": base_scores["readiness"],
         "risk": base_scores["risk"],
-        "revenue": 50,  # Baseline
-        "cost_efficiency": 50, # Baseline
-        "stability": 50 # Baseline
+        "revenue": 50,  
+        "cost_efficiency": 50, 
+        "stability": 50 
     }
 
     if scenario_type == "growth":
@@ -328,7 +320,6 @@ def generate_comparison_points(doc1_filename, doc1_swot, doc2_filename, doc2_swo
     }}
     """
     try:
-        # Using your exact client setup from the top of the file!
         response = client.models.generate_content(
             model='gemini-2.5-flash-lite', 
             contents=prompt

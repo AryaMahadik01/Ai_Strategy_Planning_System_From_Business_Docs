@@ -7,7 +7,7 @@ client = MongoClient("mongodb://localhost:27017/")
 db = client["strategix"] # Replace 'strategix' if your DB name is different
 
 admin_email = "admin@strategix.com"
-admin_password = "admin123" # Change this to whatever you want!
+admin_password = "admin123" 
 
 # Check if admin already exists
 if db.users.find_one({"email": admin_email}):
@@ -17,7 +17,7 @@ else:
     db.users.insert_one({
         "name": "System Admin",
         "email": admin_email,
-        "password": generate_password_hash(admin_password), # Securely hashed
+        "password": generate_password_hash(admin_password), 
         "role": "admin",
         "created_at": datetime.now()
     })

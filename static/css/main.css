@@ -27,14 +27,14 @@
 }
 
 /* =======================
-   1. HEADER & LOGO (New)
+   1. HEADER & LOGO 
 ======================= */
 .site-header {
     position: absolute; /* Sits on top of the hero image */
     top: 0;
     left: 0;
     width: 100%;
-    padding: 25px 50px; /* Adjust padding for mobile later if needed */
+    padding: 25px 50px; 
     z-index: 10; /* Ensures it sits above the background overlay */
     display: flex;
     align-items: center;
@@ -42,17 +42,16 @@
 }
 
 .nav-logo {
-    height: 50px; /* Controls the size of your logo */
-    width: auto;  /* Maintains aspect ratio */
+    height: 50px; 
+    width: auto;  
     display: block;
 }
 .logo-text {
     color: white;
     font-size: 30px;
-    font-weight: 800; /* Extra bold */
-    letter-spacing: -0.5px; /* Tighter spacing looks more modern */
+    font-weight: 800; 
+    letter-spacing: -0.5px; 
     font-family: 'Malgun Gothic', 'Arial', sans-serif;
-    /* Optional: Add a slight text shadow to pop against the background */
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
@@ -66,7 +65,7 @@
     }
 }
 /* =======================
-   2. HERO SECTION (Updated with Image)
+   2. HERO SECTION 
 ======================= */
 .hero {
     /* We use a linear-gradient OVER the image to darken it so text is readable */
@@ -81,7 +80,7 @@
     background-repeat: no-repeat;
     
     color: white;
-    padding: 180px 20px 120px; /* Increased top padding to make room for logo header */
+    padding: 180px 20px 120px; 
     text-align: center;
     position: relative;
 }
@@ -92,13 +91,12 @@
     margin-bottom: 20px;
     letter-spacing: -1px;
     line-height: 1.2;
-    /* Optional: Adds a subtle text shadow for better pop against image */
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .hero p {
     font-size: 18px;
-    color: #cbd5e1; /* Lighter slate for subtitle */
+    color: #cbd5e1; 
     max-width: 600px;
     margin: 0 auto 40px;
     line-height: 1.6;
@@ -134,15 +132,15 @@ a { text-decoration: none; color: inherit; transition: 0.2s; }
     top: 0;
 }
 
-/* NEW: This class will wrap your links so they scroll */
+
 .sidebar-nav {
-    flex: 1;             /* Take up all available empty space */
+    flex: 1;            
     overflow-y: auto;    /* Scroll only this middle section */
     margin-bottom: 20px; /* Space before logout */
     padding-right: 5px;  /* Avoid scrollbar overlapping text */
 }
 
-/* Custom Scrollbar for Sidebar (Chrome/Safari) */
+/* Custom Scrollbar for Sidebar */
 .sidebar-nav::-webkit-scrollbar {
     width: 4px;
 }
@@ -267,25 +265,7 @@ button:hover, .btn:hover {
 
 /* =======================
    5. LANDING PAGE
-=======================
-.hero {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    color: white;
-    padding: 120px 20px;
-    text-align: center;
-}
-
-.hero h1 {
-    font-size: 56px;
-    line-height: 1.1;
-    margin-bottom: 24px;
-    background: linear-gradient(to right, #fff, #94a3b8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.hero p { font-size: 20px; color: #cbd5e1; max-width: 600px; margin: 0 auto 40px; } */
-
+======================= */
 .features { padding: 80px 20px; background: white; }
 .feature-grid {
     display: grid;
@@ -320,7 +300,6 @@ button:hover, .btn:hover {
     transition: width 0.6s ease-in-out; /* Smooth animation */
 }
 
-/* Optional: Different colors for specific metrics if you want */
 .progress-bar.green { background: linear-gradient(90deg, #10b981, #34d399); }
 .progress-bar.red { background: linear-gradient(90deg, #ef4444, #f87171); }
 
@@ -380,7 +359,7 @@ button:hover, .btn:hover {
    8. TESTIMONIALS SECTION
 ======================= */
 .testimonials {
-    background: #f8fafc; /* Light gray background to separate from white features */
+    background: #f8fafc; 
     padding: 100px 20px;
     text-align: center;
 }
@@ -429,7 +408,7 @@ button:hover, .btn:hover {
 }
 
 .stars {
-    color: #f59e0b; /* Gold color */
+    color: #f59e0b; 
     margin-bottom: 15px;
     font-size: 14px;
 }
@@ -463,7 +442,7 @@ button:hover, .btn:hover {
    9. PROFESSIONAL FOOTER
 ======================= */
 .site-footer {
-    background: #0f172a; /* Dark Slate */
+    background: #0f172a; 
     color: #94a3b8;
     padding: 80px 20px 40px;
     border-top: 1px solid #1e293b;

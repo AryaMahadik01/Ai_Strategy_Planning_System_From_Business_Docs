@@ -29,7 +29,7 @@ def setup_nltk():
                     try:
                         nltk.data.find(f"corpora/{r}")
                     except LookupError:
-                        pass # We assume setup_ai.py handled it
+                        pass 
 
 # --- 2. CLEANING & PREPROCESSING ---
 def clean_text(text):
@@ -103,9 +103,9 @@ def extract_key_phrases(text, top_n=8):
 # ALIAS FOR BACKWARD COMPATIBILITY
 extract_keywords = extract_key_phrases
 
-# =========================================================
+
 # 6. STRATEGY GENERATORS (RESTORED & UPGRADED)
-# =========================================================
+
 
 def detect_business_intent(text):
     """Detects if the doc is about Growth, Efficiency, or Risk."""
@@ -116,7 +116,7 @@ def detect_business_intent(text):
         "risk_compliance": len(re.findall(r'(risk|compliance|regulation|legal|audit|threat)', text)),
         "digital_transformation": len(re.findall(r'(digital|ai|tech|cloud|automation|data)', text))
     }
-    # Return top 2 intents
+    
     sorted_intents = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     return [k for k, v in sorted_intents[:2]]
 
@@ -215,7 +215,6 @@ def prioritize_strategies(strategies, swot):
         })
     return prioritized
 
-# --- MAIN WRAPPER FOR NEW APP.PY ---
 def analyze_document_text(raw_text):
     """
     Main function called by app.py. Runs all analysis.

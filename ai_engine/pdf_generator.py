@@ -9,15 +9,14 @@ from reportlab.platypus import (
 )
 from reportlab.lib.units import inch
 
-# --- SAFE MODE GRAPHICS IMPORTS ---
+# GRAPHICS IMPORTS
 from reportlab.graphics.shapes import Drawing, Rect, String
 from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.charts.barcharts import VerticalBarChart
 from reportlab.graphics.charts.legends import Legend
 
-# ==========================================
+
 # 1. HELPER: CONTENT EXPANSION
-# ==========================================
 def expand_text(section_name, content_list):
     if not content_list:
         return [Paragraph("No specific data detected for this section.", get_body_style())]
@@ -42,9 +41,8 @@ def expand_text(section_name, content_list):
 
     return elements
 
-# ==========================================
+
 # 2. STYLE DEFINITIONS
-# ==========================================
 def get_header_style():
     return ParagraphStyle(
         'Header', parent=getSampleStyleSheet()['Heading1'],
@@ -66,9 +64,8 @@ def get_body_style():
         textColor=colors.HexColor('#334155'), alignment=TA_JUSTIFY, spaceAfter=10
     )
 
-# ==========================================
+
 # 3. CHART FUNCTIONS (CENTERED)
-# ==========================================
 def create_sentiment_pie(sentiment_str):
     """Creates a centered semi-circle gauge."""
     d = Drawing(450, 170)
@@ -144,9 +141,8 @@ def create_swot_bar_chart(swot_data):
     d.add(bc)
     return d
 
-# ==========================================
+
 # 4. PAGE TEMPLATE
-# ==========================================
 def add_page_number(canvas, doc):
     canvas.saveState()
     canvas.setStrokeColor(colors.lightgrey)
@@ -158,9 +154,8 @@ def add_page_number(canvas, doc):
     canvas.drawCentredString(A4[0]/2, 35, text)
     canvas.restoreState()
 
-# ==========================================
+
 # 5. MAIN GENERATION FUNCTION
-# ==========================================
 def generate_strategy_pdf(doc, output_path):
     doc_template = SimpleDocTemplate(
         output_path, pagesize=A4,
@@ -314,7 +309,7 @@ def generate_strategy_pdf(doc, output_path):
                 ('VALIGN', (0,0), (-1,-1), 'TOP'),
                 ('GRID', (0,0), (-1,-1), 1, colors.HexColor('#e2e8f0')),
                 ('PADDING', (0,0), (-1,-1), 10),
-                ('BACKGROUND', (0,1), (-1,-1), colors.HexColor('#f8fafc')), # Light background for rows
+                ('BACKGROUND', (0,1), (-1,-1), colors.HexColor('#f8fafc')), 
             ]))
             Story.append(t_steps)
             Story.append(Spacer(1, 20))

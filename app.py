@@ -24,14 +24,14 @@ from ai_engine.nlp_processor import (
     generate_summary
 )
 from ai_engine.strategy_generator import (
-    generate_full_strategy_profile, # <--- Our new Gemini function!
+    generate_full_strategy_profile, # Gemini function
     generate_initial_strategy, generate_kpis, 
     generate_action_plan, prioritize_strategies,
     calculate_strategic_scores, simulate_scenario,
     generate_comparison_points
 )
 from ai_engine.pdf_generator import generate_strategy_pdf
-from ai_engine.chat_processor import get_document_answer  # <--- ADD THIS
+from ai_engine.chat_processor import get_document_answer  
 import ai_engine.nlp_processor as nlp
 
 
@@ -152,7 +152,6 @@ def forgot_password():
     return render_template('auth/forgot_password.html')
 
 # --- ROUTE 2: VERIFY TOKEN & RESET PASSWORD ---
-# --- ROUTE 2: VERIFY TOKEN & RESET PASSWORD ---
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     try:
@@ -166,12 +165,11 @@ def reset_password(token):
         new_password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
         
-        # 🚀 NEW LOGIC: Check if passwords match!
+        #Check if passwords match!
         if new_password != confirm_password:
             flash('Passwords do not match. Please try again.', 'danger')
             return redirect(url_for('reset_password', token=token))
         
-        # Hash the new password and save it
         hashed_password = generate_password_hash(new_password)
         mongo.db.users.update_one({"email": email}, {"$set": {"password": hashed_password}})
         
@@ -182,7 +180,7 @@ def reset_password(token):
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    # ✅ already logged in → redirect
+    #  already logged in → redirect
     if "user" in session:
         return redirect(url_for("user_dashboard"))
 
@@ -191,8 +189,6 @@ def register():
         email = request.form["email"].strip()
         # Hash the password for security
         password = generate_password_hash(request.form["password"].strip())
-        
-        # ❌ REMOVED: role = request.form["role"] (This was causing the crash!)
 
         if mongo.db.users.find_one({"email": email}):
             flash("User already exists with that email.")
@@ -203,7 +199,7 @@ def register():
             "name": name,
             "email": email,
             "password": password,
-            "role": "user",  # <--- HARDCODED SECURITY
+            "role": "user",  
             "created_at": datetime.now()
         })
         
@@ -228,15 +224,13 @@ def login():
         user = mongo.db.users.find_one({"email": email})
         
         if user:
-            # 1. CHECK IF PASSWORD MATCHES (HASHED or PLAIN)
-            # We try checking the hash first. If that errors (because it's plain text), we fallback to plain text.
             password_matches = False
             
             try:
                 if check_password_hash(user["password"], password):
                     password_matches = True
             except:
-                # If check_password_hash fails (e.g. user has plain text "123"), do direct comparison
+                # If check_password_hash fails 
                 if user["password"] == password:
                     password_matches = True
             
@@ -325,9 +319,6 @@ def user_documents():
             
             # 2. Run Industry-Grade NLP Analysis (Sentiment, Entities, Smart Summary)
             analysis = nlp.analyze_document_text(raw_text)
-
-            # 3. Run AI Strategic Analysis using Gemini
-            #from ai_engine.strategy_generator import generate_full_strategy_profile
             
             # Get everything from Gemini in one call
             llm_analysis = generate_full_strategy_profile(raw_text)
@@ -348,13 +339,13 @@ def user_documents():
             inserted_doc = mongo.db.documents.insert_one({
                 "user": session["user"],
                 "filename": filename,
-                "raw_text": raw_text,       # Critical for Chat
-                "cleaned_text": raw_text,   # (Simplified for now)
+                "raw_text": raw_text,      
+                "cleaned_text": raw_text,  
                 
                 # --- INTELLIGENCE DATA ---
-                "summary": analysis.get("summary"),       # Uses the new smart summarizer
+                "summary": analysis.get("summary"),      
                 "sentiment": analysis.get("sentiment", "Neutral"),
-                "entities": analysis.get("entities", {}), # Orgs, Money, Locations
+                "entities": analysis.get("entities", {}), 
                 "keywords": analysis.get("keywords", []),
                 "word_count": analysis.get("word_count", 0),
 
@@ -403,7 +394,7 @@ def delete_document(doc_id):
         # 2. Delete from Database
         mongo.db.documents.delete_one({"_id": ObjectId(doc_id)})
         
-        # 3. (Optional) Delete the actual file from the uploads folder to save space
+        # 3. Delete the actual file from the uploads folder to save space
         try:
             file_path = os.path.join(app.config["UPLOAD_FOLDER"], doc["filename"])
             if os.path.exists(file_path):
@@ -467,7 +458,6 @@ def user_performance():
     if "performance_metrics" in doc:
         metrics = doc["performance_metrics"]
     else:
-        # Generate them and save them to the DB so we never ask the AI again for this doc
         from ai_engine.strategy_generator import generate_performance_metrics
         metrics = generate_performance_metrics(doc["raw_text"])
         
@@ -590,7 +580,7 @@ def compare_strategies():
         else:
             reason = f"{doc2['filename']} offers a more balanced approach, effectively mitigating risks ({stats2['risk_label']}) while maintaining operational stability."
 
-        # --- NEW: Call the function from strategy_generator.py! ---
+        # Call the function from strategy_generator
         api_points = generate_comparison_points(
             doc1['filename'], doc1.get('swot', {}), 
             doc2['filename'], doc2.get('swot', {})
@@ -598,7 +588,6 @@ def compare_strategies():
         
         doc1_points = api_points.get("doc1_points", ["Strong market positioning.", "Review initial capital risks.", "Solid competitive advantage."])
         doc2_points = api_points.get("doc2_points", ["Balanced operational approach.", "Mitigated supply chain risks.", "Steady growth trajectory."])
-        # -----------------------------------------------------------
 
         comparison = {
             "doc1": {
@@ -745,8 +734,6 @@ def admin_analytics():
         risk_values=list(risk_count.values())
     )
 
-
-
 @app.route("/admin/users")
 def admin_users():
     if not admin_required():
@@ -764,7 +751,6 @@ def admin_users():
         users=users,
         usage=usage
     )
-
 
 @app.route("/admin/strategies")
 def admin_strategies():
@@ -805,10 +791,6 @@ def admin_logs():
     logs = list(mongo.db.logs.find().sort("_id", -1))
     return render_template("admin/logs.html", logs=logs)
 
-
-
-
-
 # ---------------- DOWNLOAD REPORT ----------------
 @app.route("/download/<doc_id>")
 def download_pdf(doc_id):
@@ -831,7 +813,7 @@ def download_pdf(doc_id):
 
     return send_file(pdf_path, as_attachment=True)
 
-# ---------------- USER EXPORT PPTX (ADDITIVE FEATURE) ----------------
+# ---------------- USER EXPORT PPTX ----------------
 @app.route("/user/export/pptx")
 def export_pptx():
     if "user" not in session:

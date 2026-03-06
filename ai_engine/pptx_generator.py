@@ -50,12 +50,11 @@ def generate_strategy_pptx(doc, output_path):
     """Generates an Enterprise-grade PowerPoint presentation from AI strategy data."""
     prs = Presentation()
     
-    # We use Layout 6 (Blank) for EVERYTHING to prevent PowerPoint's default formatting from overlapping
+   
     layout_blank = prs.slide_layouts[6] 
 
-    # ==========================================
+    
     # SLIDE 1: COVER SLIDE
-    # ==========================================
     cover_slide = prs.slides.add_slide(layout_blank)
     
     banner = cover_slide.shapes.add_shape(1, Inches(0), Inches(0), Inches(10), Inches(1.5)) 
@@ -83,9 +82,8 @@ def generate_strategy_pptx(doc, output_path):
         para.font.size = Pt(12)
         para.font.color.rgb = RGBColor(100, 116, 139)
 
-    # ==========================================
+    
     # SLIDE 2: 1. EXECUTIVE SUMMARY
-    # ==========================================
     slide2 = prs.slides.add_slide(layout_blank)
     add_custom_title(slide2, "1. Executive Summary & Dashboard")
 
@@ -118,21 +116,18 @@ def generate_strategy_pptx(doc, output_path):
     tx_sent = slide2.shapes.add_textbox(Inches(0.5), Inches(6.0), Inches(9), Inches(0.5))
     p = tx_sent.text_frame.paragraphs[0]
     
-    # First part: The standard label
     run1 = p.add_run()
     run1.text = "Overall AI Sentiment: "
     run1.font.bold = True
     run1.font.color.rgb = PRIMARY_BLUE
     
-    # Second part: The highlighted sentiment value
     run2 = p.add_run()
     run2.text = str(sentiment)
     run2.font.bold = True
-    run2.font.color.rgb = ACCENT_INDIGO  # This applies the nice Indigo theme color to the answer!
+    run2.font.color.rgb = ACCENT_INDIGO  
     
-    # ==========================================
+  
     # SLIDE 3: 2. SWOT ANALYSIS
-    # ==========================================
     slide3 = prs.slides.add_slide(layout_blank)
     add_custom_title(slide3, "2. SWOT Analysis")
     
@@ -157,9 +152,8 @@ def generate_strategy_pptx(doc, output_path):
             p.font.size = Pt(12)
             p.font.color.rgb = PRIMARY_BLUE
 
-    # ==========================================
+   
     # SLIDE 4: 3. PESTLE ANALYSIS
-    # ==========================================
     slide4 = prs.slides.add_slide(layout_blank)
     add_custom_title(slide4, "3. Environmental Scan (PESTLE)")
     
@@ -182,9 +176,8 @@ def generate_strategy_pptx(doc, output_path):
             style_table_cell(table_p.cell(row_idx, 1), str(val), 12)
             row_idx += 1
 
-    # ==========================================
+    
     # DYNAMIC SLIDES: 4. EXECUTION ROADMAP
-    # ==========================================
     roadmap = doc.get("execution_roadmap", [])
     
     if not roadmap:
@@ -193,19 +186,17 @@ def generate_strategy_pptx(doc, output_path):
         tx = slide_empty.shapes.add_textbox(Inches(1), Inches(3), Inches(8), Inches(1))
         tx.text_frame.text = "No Roadmap generated yet. Generate it in the web dashboard first."
     else:
-        # 🚀 NEW LOGIC: Flatten the roadmap into individual rows, NOT phases.
         flat_steps = []
         for phase in roadmap:
             phase_info = f"{phase.get('phase', 'Phase')}\nFocus: {phase.get('focus', '')}"
             for i, step in enumerate(phase.get('steps', [])):
                 flat_steps.append({
-                    "phase_display": phase_info if i == 0 else "", # Only show phase name on the first row of that phase
+                    "phase_display": phase_info if i == 0 else "", 
                     "what": step.get('what', ''),
                     "why": step.get('why', ''),
                     "how": step.get('how', '')
                 })
         
-        # 🚀 STRICT LIMIT: Maximum 4 rows per slide ensures it NEVER overflows
         MAX_ROWS_PER_SLIDE = 4
         chunks = [flat_steps[i:i + MAX_ROWS_PER_SLIDE] for i in range(0, len(flat_steps), MAX_ROWS_PER_SLIDE)]
         
@@ -243,9 +234,8 @@ def generate_strategy_pptx(doc, output_path):
                 metric_text = f"📈 {step_data['how']}"
                 style_table_cell(table_r.cell(r_idx, 2), metric_text, 10)
 
-    # ==========================================
+    
     # FINAL SLIDE: 5. CRITICAL RISK MANAGEMENT
-    # ==========================================
     slide_risk = prs.slides.add_slide(layout_blank)
     add_custom_title(slide_risk, "5. Critical Risk Management")
     
